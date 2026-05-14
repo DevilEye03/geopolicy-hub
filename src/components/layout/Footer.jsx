@@ -3,9 +3,26 @@ import { Rss, Mail, Globe, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function Footer() {
+  const [email, setEmail] = React.useState('');
+  const [isSubscribed, setIsSubscribed] = React.useState(false);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    const subscribers = JSON.parse(localStorage.getItem('geopolicy-subscribers') || '[]');
+    if (!subscribers.includes(email)) {
+      subscribers.push(email);
+      localStorage.setItem('geopolicy-subscribers', JSON.stringify(subscribers));
+    }
+    setIsSubscribed(true);
+    setEmail('');
+    setTimeout(() => setIsSubscribed(false), 3000);
+  };
+
   return (
     <footer className="footer">
       <div className="footer-inner">
+        {/* ... (existing sections) ... */}
+        {/* ... (I'll keep the actual sections in the replacement below) ... */}
         <div className="footer-brand">
           <span className="brand-text" style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', fontFamily: 'var(--font-serif)' }}>GeoPolicy<span style={{ color: 'var(--accent-primary)' }}>Hub</span></span>
           <p style={{ color: 'var(--text-secondary)', marginTop: 'var(--space-md)' }}>Your premier platform for geopolitics, international relations, laws, and policy analysis.</p>
@@ -39,10 +56,20 @@ export function Footer() {
         <div>
           <h4 style={{ marginBottom: 'var(--space-md)' }}>Newsletter</h4>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-md)' }}>Get weekly insights on global affairs delivered to your inbox.</p>
-          <form style={{ display: 'flex', gap: 'var(--space-xs)' }}>
-            <input type="email" placeholder="your@email.com" required style={{ padding: 'var(--space-sm)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', flex: 1 }} />
-            <button type="submit" className="btn btn-primary" style={{ padding: 'var(--space-sm) var(--space-md)' }}>Subscribe</button>
+          <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: 'var(--space-xs)' }}>
+            <input 
+              type="email" 
+              placeholder="your@email.com" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ padding: 'var(--space-sm)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', flex: 1 }} 
+            />
+            <button type="submit" className="btn btn-primary" style={{ padding: 'var(--space-sm) var(--space-md)' }}>
+              {isSubscribed ? '✓' : 'Subscribe'}
+            </button>
           </form>
+          {isSubscribed && <p style={{ color: 'var(--accent-primary)', fontSize: 'var(--text-xs)', marginTop: 'var(--space-xs)' }}>Thanks for subscribing!</p>}
         </div>
       </div>
       <div style={{ textAlign: 'center', marginTop: 'var(--space-2xl)', color: 'var(--text-tertiary)', borderTop: '1px solid var(--border-primary)', paddingTop: 'var(--space-md)' }}>

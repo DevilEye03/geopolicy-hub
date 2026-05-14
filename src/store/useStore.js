@@ -13,5 +13,14 @@ export const useStore = create((set) => ({
   user: {
     name: 'Admin User',
     avatar: 'GP'
-  }
+  },
+
+  isSearchOpen: false,
+  toggleSearch: () => set((state) => ({ isSearchOpen: !state.isSearchOpen })),
+  
+  searchQuery: '',
+  setSearchQuery: (query) => set({ searchQuery: query }),
+
+  subscribers: [],
+  addSubscriber: (email) => set((state) => ({ subscribers: [...state.subscribers, email] }))
 }));

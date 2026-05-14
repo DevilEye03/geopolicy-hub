@@ -36,6 +36,17 @@ const mockArticles = [
 ];
 
 export function Home() {
+  const [articles, setArticles] = React.useState(mockArticles);
+
+  React.useEffect(() => {
+    const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+    if (savedArticles.length > 0) {
+      // Map 'image' to 'coverImage' if necessary for backward compatibility, 
+      // or just ensure we handle both in ArticleCard
+      setArticles([...savedArticles, ...mockArticles]);
+    }
+  }, []);
+
   return (
     <div>
       <section style={{ padding: 'var(--space-3xl) 0', textAlign: 'center' }}>
@@ -55,7 +66,7 @@ export function Home() {
           Featured Insights
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-xl)' }}>
-          {mockArticles.map(article => (
+          {articles.map(article => (
             <ArticleCard key={article.id} article={article} />
           ))}
         </div>

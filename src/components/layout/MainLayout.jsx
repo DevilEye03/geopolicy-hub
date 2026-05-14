@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { useStore } from '../../store/useStore';
@@ -8,10 +8,26 @@ export function MainLayout() {
   const { theme } = useStore();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 1) {
+      const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+      const filtered = savedArticles.filter(a => 
+        a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        a.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (a.tags && a.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())))
+      );
+      setResults(filtered.slice(0, 5));
+    } else {
+      setResults([]);
+    }
+  }, [searchQuery]);
 
   return (
     <div className="app-container">
@@ -20,28 +36,59 @@ export function MainLayout() {
         onOpenSearch={() => setSearchOpen(true)} 
       />
       
-      {/* Search Modal Placeholder */}
+      {/* Search Modal */}
       {isSearchOpen && (
-        <div className="modal-overlay active" onClick={() => setSearchOpen(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <input type="text" placeholder="Search articles, tags, categories..." style={{ width: '100%', padding: 'var(--space-md)', fontSize: 'var(--text-lg)', background: 'var(--bg-input)', border: '1px solid var(--border-primary)', borderRadius: 'var(--radius-md)' }} autoFocus />
+        <div className="modal-overlay active" onClick={() => { setSearchOpen(false); setSearchQuery(''); }}>
+          <div className="search-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="search-input-wrapper">
+              <input 
+                type="text" 
+                placeholder="Search articles, topics, or authors..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus 
+              />
+            </div>
+            
+            {results.length > 0 && (
+              <div className="search-results">
+                {results.map(article => (
+                  <Link 
+                    key={article.id} 
+                    to={`/article/${article.id}`} 
+                    className="search-result-item"
+                    onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+                  >
+                    <div className="result-info">
+                      <span className="result-category">{article.category}</span>
+                      <h4 className="result-title">{article.title}</h4>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+            
+            {searchQuery.length > 1 && results.length === 0 && (
+              <div className="search-no-results">No matches found for "{searchQuery}"</div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Mobile Sidebar Placeholder */}
+      {/* Mobile Sidebar */}
       {isSidebarOpen && (
         <div className="modal-overlay active" onClick={() => setSidebarOpen(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ width: '280px', height: '100%', margin: 0, position: 'absolute', left: 0, top: 0, borderRadius: 0 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-xl)' }}>
-              <h3>Menu</h3>
-              <button className="btn" onClick={() => setSidebarOpen(false)}>Close</button>
+          <div className="sidebar-content" onClick={e => e.stopPropagation()}>
+            <div className="sidebar-header">
+              <span className="brand-text">GeoPolicy<span className="brand-accent">Hub</span></span>
+              <button className="close-btn" onClick={() => setSidebarOpen(false)}>✕</button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
-              <a href="/">Home</a>
-              <a href="/write">Write</a>
-              <a href="/categories">Categories</a>
-              <a href="/dashboard">Dashboard</a>
+            <div className="sidebar-links">
+              <Link to="/" onClick={() => setSidebarOpen(false)}>Home</Link>
+              <Link to="/write" onClick={() => setSidebarOpen(false)}>Write</Link>
+              <Link to="/categories" onClick={() => setSidebarOpen(false)}>Categories</Link>
+              <Link to="/dashboard" onClick={() => setSidebarOpen(false)}>Dashboard</Link>
+              <Link to="/bookmarks" onClick={() => setSidebarOpen(false)}>Bookmarks</Link>
             </div>
           </div>
         </div>
