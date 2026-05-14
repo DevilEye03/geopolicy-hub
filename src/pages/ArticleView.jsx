@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Share2, Twitter, MessageCircle, Linkedin, Clock, User, ArrowLeft } from 'lucide-react';
+import { Share2, Globe, MessageCircle, BookOpen, Clock, User, ArrowLeft } from 'lucide-react';
 
 const mockArticles = [
   {
@@ -20,8 +20,7 @@ const mockArticles = [
     authorInitials: 'ER',
     coverImage: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80',
     publishedAt: '2025-05-10T10:00:00Z'
-  },
-  // Add other mocks if needed
+  }
 ];
 
 export function ArticleView() {
@@ -35,13 +34,13 @@ export function ArticleView() {
 
     // Fetch article
     const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
-    const foundArticle = [...savedArticles, ...mockArticles].find(a => a.id === id);
+    const foundArticle = [...savedArticles, ...mockArticles].find(a => String(a.id) === String(id));
     setArticle(foundArticle);
 
     // Progress bar logic
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (window.scrollY / totalHeight) * 100;
+      const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
       setScrollProgress(progress);
     };
 
@@ -87,7 +86,7 @@ export function ArticleView() {
             <div className="author-info">
               <div className="author-name">{article.author}</div>
               <div className="publish-date">
-                {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                {new Date(article.publishedAt || Date.now()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
               </div>
             </div>
           </div>
@@ -109,14 +108,16 @@ export function ArticleView() {
               target="_blank" 
               rel="noopener noreferrer"
               className="share-btn twitter"
+              title="Share on X"
             >
-              <Twitter size={20} />
+              <Globe size={20} />
             </a>
             <a 
               href={`https://wa.me/?text=${shareTitle}%20${shareUrl}`} 
               target="_blank" 
               rel="noopener noreferrer"
               className="share-btn whatsapp"
+              title="Share on WhatsApp"
             >
               <MessageCircle size={20} />
             </a>
@@ -125,8 +126,9 @@ export function ArticleView() {
               target="_blank" 
               rel="noopener noreferrer"
               className="share-btn linkedin"
+              title="Share on LinkedIn"
             >
-              <Linkedin size={20} />
+              <BookOpen size={20} />
             </a>
           </div>
         </footer>
