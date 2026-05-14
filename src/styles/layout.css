@@ -1,0 +1,82 @@
+/* Layout Structure */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+    width: 100%;
+}
+
+.navbar {
+    height: var(--navbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-xl);
+}
+
+.navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: var(--content-max);
+    margin: 0 auto;
+}
+
+.navbar-brand {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    font-family: var(--font-serif);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.navbar-brand .brand-accent {
+    color: var(--accent-primary);
+}
+
+.navbar-links {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.navbar-links a {
+    color: var(--text-secondary);
+    font-weight: var(--weight-medium);
+    transition: var(--transition-fast);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+}
+
+.navbar-links a:hover, .navbar-links a.active {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-primary);
+    padding: var(--space-2xl) var(--space-xl);
+    margin-top: auto;
+}
+
+.footer-inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-xl);
+}

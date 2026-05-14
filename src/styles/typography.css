@@ -1,0 +1,27 @@
+/* Typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+}
+
+h1 { font-size: var(--text-4xl); font-weight: var(--weight-bold); }
+h2 { font-size: var(--text-3xl); font-weight: var(--weight-bold); }
+h3 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); }
+h4 { font-size: var(--text-xl); font-weight: var(--weight-semibold); }
+
+p {
+    font-family: var(--font-sans);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+    line-height: var(--leading-relaxed);
+}
+
+.text-gradient {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
