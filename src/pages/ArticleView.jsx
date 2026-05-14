@@ -99,6 +99,48 @@ export function ArticleView() {
           dangerouslySetInnerHTML={{ __html: article.content }} 
         />
 
+        {/* Comments Section */}
+        <section className="comments-section">
+          <h3>Analysis & Discussion</h3>
+          <form className="comment-form" onSubmit={(e) => {
+            e.preventDefault();
+            const name = e.target.name.value;
+            const text = e.target.comment.value;
+            if (!name || !text) return;
+            
+            const newComment = {
+              id: Date.now(),
+              name,
+              text,
+              date: new Date().toISOString()
+            };
+            
+            const allComments = JSON.parse(localStorage.getItem(`comments-${article.id}`) || '[]');
+            const updatedComments = [newComment, ...allComments];
+            localStorage.setItem(`comments-${article.id}`, JSON.stringify(updatedComments));
+            
+            e.target.reset();
+            // Trigger a re-render
+            window.location.reload(); 
+          }}>
+            <input type="text" name="name" placeholder="Your Name" required />
+            <textarea name="comment" placeholder="Add your analysis or perspective..." required></textarea>
+            <button type="submit" className="btn btn-primary">Post Comment</button>
+          </form>
+
+          <div className="comments-list">
+            {JSON.parse(localStorage.getItem(`comments-${article.id}`) || '[]').map(comment => (
+              <div key={comment.id} className="comment-item">
+                <div className="comment-header">
+                  <span className="comment-author">{comment.name}</span>
+                  <span className="comment-date">{new Date(comment.date).toLocaleDateString()}</span>
+                </div>
+                <p className="comment-text">{comment.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Sharing Section */}
         <footer className="article-footer">
           <h3>Share this analysis</h3>

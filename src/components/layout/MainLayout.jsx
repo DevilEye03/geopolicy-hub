@@ -31,6 +31,24 @@ export function MainLayout() {
 
   return (
     <div className="app-container">
+      {/* Global Pulse News Ticker */}
+      <div className="news-ticker-container">
+        <div className="ticker-label">Global Pulse</div>
+        <div className="ticker-wrapper">
+          <div className="ticker-content">
+            <span className="ticker-item">G7 Summit begins in Rome...</span>
+            <span className="ticker-item">New Trade Accords signed in Singapore...</span>
+            <span className="ticker-item">Oil prices stabilize following OPEC+ meeting...</span>
+            <span className="ticker-item">Bilateral talks resumed between ASEAN leaders...</span>
+            <span className="ticker-item">Major tech breakthrough announced in Silicon Valley...</span>
+            {/* Repeat items for seamless scrolling */}
+            <span className="ticker-item">G7 Summit begins in Rome...</span>
+            <span className="ticker-item">New Trade Accords signed in Singapore...</span>
+            <span className="ticker-item">Oil prices stabilize following OPEC+ meeting...</span>
+          </div>
+        </div>
+      </div>
+
       <Navbar 
         onOpenSidebar={() => setSidebarOpen(true)} 
         onOpenSearch={() => setSearchOpen(true)} 

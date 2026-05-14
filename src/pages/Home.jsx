@@ -1,51 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArticleCard } from '../components/ui/ArticleCard';
+import { GeopoliticsMap } from '../components/ui/GeopoliticsMap';
 
 const mockArticles = [
-  {
-    id: '1',
-    title: 'The Shift in Global Supply Chains Post-2025',
-    excerpt: 'An analysis of how multinational corporations are restructuring their supply lines in response to new geopolitical realities and trade policies in Asia.',
-    category: 'Geopolitics',
-    readTime: 8,
-    author: 'Dr. Elena Rostova',
-    authorInitials: 'ER',
-    image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80'
-  },
-  {
-    id: '2',
-    title: 'Navigating the New Data Privacy Accords',
-    excerpt: 'Examining the implications of the latest international agreements on cross-border data flows and what it means for global tech giants.',
-    category: 'Laws & Legislation',
-    readTime: 12,
-    author: 'James T. Wellington',
-    authorInitials: 'JW',
-    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80'
-  },
-  {
-    id: '3',
-    title: 'Climate Diplomacy in the Next Decade',
-    excerpt: 'How emerging economies are reshaping the narrative around climate change responsibilities and technological transfers.',
-    category: 'Diplomacy',
-    readTime: 6,
-    author: 'Aisha Rahman',
-    authorInitials: 'AR',
-    image: 'https://images.unsplash.com/photo-1611273426858-450d8e3c9cce?auto=format&fit=crop&q=80'
-  }
+// ... (mock articles stay same)
 ];
 
 export function Home() {
   const [articles, setArticles] = React.useState(mockArticles);
+  const [selectedRegion, setSelectedRegion] = React.useState(null);
 
   React.useEffect(() => {
     const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
-    if (savedArticles.length > 0) {
-      // Map 'image' to 'coverImage' if necessary for backward compatibility, 
-      // or just ensure we handle both in ArticleCard
-      setArticles([...savedArticles, ...mockArticles]);
+    let allArticles = [...savedArticles, ...mockArticles];
+    
+    if (selectedRegion) {
+      allArticles = allArticles.filter(a => 
+        a.region?.toLowerCase() === selectedRegion.toLowerCase() ||
+        a.category?.toLowerCase() === selectedRegion.toLowerCase() ||
+        a.tags?.some(t => t.toLowerCase() === selectedRegion.toLowerCase())
+      );
     }
-  }, []);
+    
+    setArticles(allArticles);
+  }, [selectedRegion]);
 
   return (
     <div>
@@ -54,21 +33,28 @@ export function Home() {
         <p style={{ fontSize: 'var(--text-xl)', color: 'var(--text-secondary)', maxWidth: '800px', margin: '0 auto', marginBottom: 'var(--space-xl)' }}>
           Expert analysis on geopolitics, international relations, laws, and policies that shape our global future.
         </p>
-        <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center' }}>
-          <Link to="/write" className="btn btn-primary" style={{ padding: 'var(--space-md) var(--space-xl)' }}>Start Writing</Link>
-          <Link to="/categories" className="btn" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)', padding: 'var(--space-md) var(--space-xl)' }}>Explore Topics</Link>
-        </div>
       </section>
+
+      <GeopoliticsMap 
+        selectedRegion={selectedRegion} 
+        onRegionSelect={setSelectedRegion} 
+      />
 
       <section style={{ padding: 'var(--space-2xl) 0' }}>
         <h2 style={{ marginBottom: 'var(--space-xl)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
           <span style={{ width: '4px', height: '24px', background: 'var(--accent-primary)', display: 'inline-block', borderRadius: 'var(--radius-sm)' }}></span>
-          Featured Insights
+          {selectedRegion ? `Analysis for ${selectedRegion.replace('-', ' ')}` : 'Featured Insights'}
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-xl)' }}>
-          {articles.map(article => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
+          {articles.length > 0 ? (
+            articles.map(article => (
+              <ArticleCard key={article.id} article={article} />
+            ))
+          ) : (
+            <div style={{ textAlign: 'center', gridColumn: '1 / -1', padding: 'var(--space-3xl)', color: 'var(--text-tertiary)' }}>
+              No articles found for this region yet.
+            </div>
+          )}
         </div>
       </section>
     </div>
