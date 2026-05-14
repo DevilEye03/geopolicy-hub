@@ -149,6 +149,9 @@ export function Write() {
             <option value="Diplomacy">🕊️ Diplomacy</option>
             <option value="Defense & Security">🛡️ Defense & Security</option>
             <option value="Global Economy">💹 Global Economy</option>
+            <option value="Science & Tech">💻 Science & Tech</option>
+            <option value="Health">🏥 Health</option>
+            <option value="Energy & Climate">⚡ Energy & Climate</option>
           </select>
 
           <div style={{ flex: 1, minWidth: '200px', display: 'flex', alignItems: 'center', gap: 'var(--space-xs)' }}>

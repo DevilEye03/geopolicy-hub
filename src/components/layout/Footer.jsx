@@ -36,11 +36,13 @@ export function Footer() {
         
         <div>
           <h4 style={{ marginBottom: 'var(--space-md)' }}>Categories</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-sm)' }}>
             <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Geopolitics</Link>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>International Relations</Link>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Laws & Legislation</Link>
+            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Relations</Link>
+            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Laws</Link>
             <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Policies</Link>
+            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Tech</Link>
+            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Health</Link>
           </div>
         </div>
 

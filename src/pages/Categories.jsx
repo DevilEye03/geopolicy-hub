@@ -1,26 +1,82 @@
 import React from 'react';
+import { Globe, Users, Scale, FileText, Shield, TrendingUp, Cpu, HeartPulse, Zap } from 'lucide-react';
+
+const categoryData = [
+  { 
+    name: 'Geopolitics', 
+    icon: Globe, 
+    description: 'Analyzing global power dynamics and territorial relationships.',
+    color: '#4F46E5'
+  },
+  { 
+    name: 'International Relations', 
+    icon: Users, 
+    description: 'Interactions between sovereign states and intergovernmental organizations.',
+    color: '#10B981'
+  },
+  { 
+    name: 'Laws & Legislation', 
+    icon: Scale, 
+    description: 'Legal frameworks and international law developments.',
+    color: '#F59E0B'
+  },
+  { 
+    name: 'Policies', 
+    icon: FileText, 
+    description: 'Domestic and international policy analysis and impact.',
+    color: '#EF4444'
+  },
+  { 
+    name: 'Defense & Security', 
+    icon: Shield, 
+    description: 'Strategic military analysis and global security threats.',
+    color: '#8B5CF6'
+  },
+  { 
+    name: 'Global Economy', 
+    icon: TrendingUp, 
+    description: 'Financial systems, trade agreements, and global market trends.',
+    color: '#EC4899'
+  },
+  { 
+    name: 'Science & Tech', 
+    icon: Cpu, 
+    description: 'Technological innovation and its geopolitical implications.',
+    color: '#06B6D4'
+  },
+  { 
+    name: 'Health', 
+    icon: HeartPulse, 
+    description: 'Global health crises, healthcare policy, and biotechnology.',
+    color: '#F97316'
+  },
+  { 
+    name: 'Energy & Climate', 
+    icon: Zap, 
+    description: 'Energy security and global climate change responses.',
+    color: '#84CC16'
+  }
+];
 
 export function Categories() {
-  const categories = ['Geopolitics', 'International Relations', 'Laws & Legislation', 'Policies', 'Diplomacy', 'Global Economy', 'Defense & Security'];
-
   return (
-    <div>
-      <h1 style={{ marginBottom: 'var(--space-xl)' }}>Explore by Category</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--space-md)' }}>
-        {categories.map((cat, idx) => (
-          <div key={idx} style={{ 
-            padding: 'var(--space-xl)', 
-            background: 'var(--bg-elevated)', 
-            border: '1px solid var(--border-primary)', 
-            borderRadius: 'var(--radius-lg)',
-            cursor: 'pointer',
-            transition: 'var(--transition-fast)'
-          }}
-          onMouseOver={e => e.currentTarget.style.borderColor = 'var(--accent-primary)'}
-          onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-primary)'}
-          >
-            <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>{cat}</h3>
-            <p style={{ color: 'var(--text-tertiary)', marginTop: 'var(--space-xs)' }}>Explore latest analysis</p>
+    <div className="categories-page">
+      <header className="page-header">
+        <h1 className="text-gradient">Explore Knowledge</h1>
+        <p>Deep dive into specialized fields of global analysis</p>
+      </header>
+
+      <div className="categories-grid">
+        {categoryData.map((cat, idx) => (
+          <div key={idx} className="category-card" style={{ '--accent': cat.color }}>
+            <div className="category-icon-wrapper">
+              <cat.icon size={28} />
+            </div>
+            <div className="category-card-content">
+              <h3>{cat.name}</h3>
+              <p>{cat.description}</p>
+              <button className="category-action-btn">Explore Category →</button>
+            </div>
           </div>
         ))}
       </div>
