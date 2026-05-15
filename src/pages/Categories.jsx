@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Globe, Users, Scale, FileText, Shield, TrendingUp, Cpu, HeartPulse, Zap } from 'lucide-react';
 
 const categoryData = [
@@ -59,6 +60,12 @@ const categoryData = [
 ];
 
 export function Categories() {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (categoryName) => {
+    navigate(`/?category=${encodeURIComponent(categoryName)}`);
+  };
+
   return (
     <div className="categories-page">
       <header className="page-header">
@@ -68,7 +75,12 @@ export function Categories() {
 
       <div className="categories-grid">
         {categoryData.map((cat, idx) => (
-          <div key={idx} className="category-card" style={{ '--accent': cat.color }}>
+          <div 
+            key={idx} 
+            className="category-card" 
+            style={{ '--accent': cat.color, cursor: 'pointer' }}
+            onClick={() => handleCategoryClick(cat.name)}
+          >
             <div className="category-icon-wrapper">
               <cat.icon size={28} />
             </div>

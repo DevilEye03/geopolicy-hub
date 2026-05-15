@@ -1,15 +1,60 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { ArticleCard } from '../components/ui/ArticleCard';
 import { GeopoliticsMap } from '../components/ui/GeopoliticsMap';
 
 const mockArticles = [
-// ... (mock articles stay same)
+  {
+    id: '1',
+    title: 'The Shift in Global Supply Chains Post-2025',
+    excerpt: 'Multinational corporations are fundamentally rethinking their approach to global supply chains in a post-globalization era.',
+    category: 'Geopolitics',
+    readTime: 8,
+    author: 'Dr. Elena Rostova',
+    authorInitials: 'ER',
+    image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-10T10:00:00Z',
+    region: 'indo-pacific'
+  },
+  {
+    id: '2',
+    title: 'Digital Sovereignty: New Laws in the EU',
+    excerpt: 'The European Union is setting a global precedent with its latest framework on data privacy and AI regulation.',
+    category: 'Laws & Legislation',
+    readTime: 12,
+    author: 'Marcus Thorne',
+    authorInitials: 'MT',
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-12T14:30:00Z',
+    region: 'europe'
+  },
+  {
+    id: '3',
+    title: 'Energy Security in the Middle East',
+    excerpt: 'As transition to renewables accelerates, traditional energy powers are pivoting their long-term strategies.',
+    category: 'Global Economy',
+    readTime: 10,
+    author: 'Sarah Al-Fayed',
+    authorInitials: 'SA',
+    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-14T09:15:00Z',
+    region: 'middle-east'
+  }
 ];
 
 export function Home() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialCategory = queryParams.get('category');
+  
   const [articles, setArticles] = React.useState(mockArticles);
-  const [selectedRegion, setSelectedRegion] = React.useState(null);
+  const [selectedRegion, setSelectedRegion] = React.useState(initialCategory || null);
+
+  React.useEffect(() => {
+    // If the URL changes, update the selected region
+    const cat = new URLSearchParams(location.search).get('category');
+    if (cat) setSelectedRegion(cat);
+  }, [location.search]);
 
   React.useEffect(() => {
     const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
