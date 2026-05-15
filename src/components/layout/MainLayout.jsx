@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
+import { FloatingMenu } from '../ui/FloatingMenu';
 import { useStore } from '../../store/useStore';
 
 export function MainLayout() {
@@ -31,6 +32,7 @@ export function MainLayout() {
 
   return (
     <div className="app-container">
+      <div className={`bg-pattern ${theme === 'dark' ? 'pattern-grid' : 'pattern-dots'}`}></div>
       {/* Global Pulse News Ticker */}
       <div className="news-ticker-container">
         <div className="ticker-label">Global Pulse</div>
@@ -116,6 +118,7 @@ export function MainLayout() {
         <Outlet />
       </main>
 
+      <FloatingMenu />
       <Footer />
     </div>
   );

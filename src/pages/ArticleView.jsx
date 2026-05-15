@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Share2, Globe, MessageCircle, BookOpen, Clock, User, ArrowLeft } from 'lucide-react';
+import { Share2, Globe, MessageCircle, BookOpen, Clock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 
 const mockArticles = [
   {
@@ -27,6 +27,16 @@ export function ArticleView() {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isFocusMode, setIsFocusMode] = useState(false);
+
+  useEffect(() => {
+    if (isFocusMode) {
+      document.body.classList.add('focus-mode');
+    } else {
+      document.body.classList.remove('focus-mode');
+    }
+    return () => document.body.classList.remove('focus-mode');
+  }, [isFocusMode]);
 
   useEffect(() => {
     // Scroll to top on load
@@ -61,7 +71,7 @@ export function ArticleView() {
   const shareTitle = encodeURIComponent(article.title);
 
   return (
-    <div className="article-container">
+    <div className={`article-container ${isFocusMode ? 'focus-mode-active' : ''}`}>
       {/* Progress Bar */}
       <div className="reading-progress-container">
         <div className="reading-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
@@ -77,6 +87,14 @@ export function ArticleView() {
             <span className="category-tag">{article.category}</span>
             <span className="separator">•</span>
             <span className="read-time"><Clock size={14} /> {article.readTime} min read</span>
+            <button 
+              className={`focus-toggle ${isFocusMode ? 'active' : ''}`} 
+              onClick={() => setIsFocusMode(!isFocusMode)}
+              title="Toggle Focus Mode"
+            >
+              {isFocusMode ? <EyeOff size={16} /> : <Eye size={16} />}
+              <span>{isFocusMode ? 'Exit Focus' : 'Focus Mode'}</span>
+            </button>
           </div>
           
           <h1 className="article-title">{article.title}</h1>
@@ -91,6 +109,26 @@ export function ArticleView() {
             </div>
           </div>
         </header>
+
+        {/* Strategic Summary Box */}
+        <div className="strategic-summary">
+            <div className="summary-badge">Strategic Analysis</div>
+            <div className="summary-grid">
+                <div className="summary-item">
+                    <span className="summary-label">Key Takeaway</span>
+                    <p>Shift towards regional resilient supply chains over global cost-efficiency.</p>
+                </div>
+                <div className="summary-item">
+                    <span className="summary-label">Global Impact</span>
+                    <div className="impact-meter"><div className="impact-fill" style={{ width: '85%' }}></div></div>
+                    <p>High (8.5/10)</p>
+                </div>
+                <div className="summary-item">
+                    <span className="summary-label">Primary Risk</span>
+                    <p>Increased geopolitical fragmentation and trade barriers.</p>
+                </div>
+            </div>
+        </div>
 
         <img src={article.coverImage || article.image} alt={article.title} className="article-hero-image" />
 
