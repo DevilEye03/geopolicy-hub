@@ -75,6 +75,54 @@ const mockArticles = [
     image: 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&q=80',
     publishedAt: '2025-05-20T16:00:00Z',
     region: 'americas'
+  },
+  {
+    id: '7',
+    title: 'The Future of the Dollar: Rise of CBDCs',
+    excerpt: 'As Central Bank Digital Currencies gain traction, the traditional global financial order faces its biggest challenge in decades.',
+    category: 'Global Economy',
+    readTime: 14,
+    author: 'Jean-Pierre Laurent',
+    authorInitials: 'JL',
+    image: 'https://images.unsplash.com/photo-1621416848440-4369e15de757?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-22T08:00:00Z',
+    region: 'europe'
+  },
+  {
+    id: '8',
+    title: 'Maritime Security: Red Sea Bottlenecks',
+    excerpt: 'The recent escalation in maritime tensions highlights the extreme vulnerability of global trade choke points.',
+    category: 'Defense & Security',
+    readTime: 10,
+    author: 'Cmdr. James Sterling',
+    authorInitials: 'JS',
+    image: 'https://images.unsplash.com/photo-1456428746267-a1756408f782?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-24T12:45:00Z',
+    region: 'middle-east'
+  },
+  {
+    id: '9',
+    title: 'Shuttle Diplomacy in Eurasia',
+    excerpt: 'Emerging powers are taking the lead in mediating complex regional conflicts, signaling a shift toward multipolarity.',
+    category: 'Diplomacy',
+    readTime: 11,
+    author: 'Ananya Kapoor',
+    authorInitials: 'AK',
+    image: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-26T15:30:00Z',
+    region: 'indo-pacific'
+  },
+  {
+    id: '10',
+    title: 'Green Subsidies and Trade Wars',
+    excerpt: 'The race to dominate the clean energy industry is leading to a new era of protectionist industrial policies.',
+    category: 'Policies',
+    readTime: 13,
+    author: 'Prof. Thomas Miller',
+    authorInitials: 'TM',
+    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-28T14:00:00Z',
+    region: 'americas'
   }
 ];
 
