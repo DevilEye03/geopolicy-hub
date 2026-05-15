@@ -595,11 +595,20 @@
     position: fixed;
     bottom: var(--space-2xl);
     right: var(--space-2xl);
-    z-index: var(--z-sticky);
+    left: auto;
+    margin: 0;
+    z-index: 1000;
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
     gap: var(--space-md);
+}
+
+@media (max-width: 768px) {
+    .floating-menu-container {
+        bottom: var(--space-lg);
+        right: var(--space-lg);
+    }
 }
 
 .floating-main-btn {
@@ -758,5 +767,48 @@
 .article-card:hover::after {
     opacity: 1;
 }
+
+.map-svg-container {
+    background: var(--bg-secondary);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+}
+
+.map-legend-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+}
+
+.legend-pill {
+    padding: var(--space-xs) var(--space-lg);
+    border-radius: 100px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.legend-pill:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.legend-pill.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px var(--accent) 44;
+}
+
 
 

@@ -13,36 +13,44 @@ export function GeopoliticsMap({ onRegionSelect, selectedRegion }) {
 
   return (
     <div className="geopolitics-map-container">
-      <div className="map-header">
-        <h3>Interactive Strategic Map</h3>
-        <p>Explore analysis by global region</p>
+      <div className="map-header" style={{ textAlign: 'center' }}>
+        <div className="summary-badge" style={{ position: 'static', display: 'inline-block', marginBottom: 'var(--space-sm)' }}>Strategic Filtering</div>
+        <h2 className="hero-title" style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-xs)' }}>Global Intelligence Network</h2>
+        <p style={{ color: 'var(--text-secondary)' }}>Select a strategic region to focus your analysis</p>
       </div>
       
-      <div className="map-wrapper">
-        <svg viewBox="0 0 100 100" className="world-map-svg">
-          {/* Simplified World Map Shapes */}
-          {regions.map((region) => (
-            <path
-              key={region.id}
-              d={region.path}
-              fill={selectedRegion === region.id ? region.color : (hoveredRegion === region.id ? `${region.color}99` : 'var(--bg-tertiary)')}
-              stroke="var(--border-primary)"
-              strokeWidth="0.5"
-              className={`map-region ${selectedRegion === region.id ? 'active' : ''}`}
-              onMouseEnter={() => setHoveredRegion(region.id)}
-              onMouseLeave={() => setHoveredRegion(null)}
-              onClick={() => onRegionSelect(region.id === selectedRegion ? null : region.id)}
-            >
-              <title>{region.name}</title>
-            </path>
-          ))}
-        </svg>
+      <div className="map-wrapper" style={{ marginTop: 'var(--space-2xl)' }}>
+        <div className="map-svg-container">
+            <svg viewBox="0 0 100 60" className="world-map-svg">
+            {/* Improved World Map Shapes */}
+            {regions.map((region) => (
+                <path
+                key={region.id}
+                d={region.path}
+                fill={selectedRegion === region.id ? region.color : (hoveredRegion === region.id ? `${region.color}33` : 'var(--bg-tertiary)')}
+                stroke={selectedRegion === region.id ? region.color : 'var(--border-primary)'}
+                strokeWidth={selectedRegion === region.id ? "1" : "0.3"}
+                className={`map-region ${selectedRegion === region.id ? 'active' : ''}`}
+                style={{ 
+                    filter: selectedRegion === region.id ? `drop-shadow(0 0 8px ${region.color}66)` : 'none',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                onMouseEnter={() => setHoveredRegion(region.id)}
+                onMouseLeave={() => setHoveredRegion(null)}
+                onClick={() => onRegionSelect(region.id === selectedRegion ? null : region.id)}
+                >
+                <title>{region.name}</title>
+                </path>
+            ))}
+            </svg>
+        </div>
 
-        <div className="map-legend">
+        <div className="map-legend-pills">
           {regions.map((region) => (
             <button
               key={region.id}
-              className={`legend-item ${selectedRegion === region.id ? 'active' : ''}`}
+              className={`legend-pill ${selectedRegion === region.id ? 'active' : ''}`}
+              style={{ '--accent': region.color }}
               onClick={() => onRegionSelect(region.id === selectedRegion ? null : region.id)}
             >
               <span className="legend-dot" style={{ background: region.color }}></span>
@@ -53,9 +61,9 @@ export function GeopoliticsMap({ onRegionSelect, selectedRegion }) {
       </div>
       
       {selectedRegion && (
-        <div className="region-info-toast">
-          Filtering by <strong>{regions.find(r => r.id === selectedRegion)?.name}</strong>
-          <button className="clear-btn" onClick={() => onRegionSelect(null)}>✕</button>
+        <div className="region-info-toast" style={{ maxWidth: '400px', margin: 'var(--space-xl) auto' }}>
+          <span>Viewing intelligence for <strong>{regions.find(r => r.id === selectedRegion)?.name}</strong></span>
+          <button className="clear-btn" onClick={() => onRegionSelect(null)}>Reset Filter</button>
         </div>
       )}
     </div>
