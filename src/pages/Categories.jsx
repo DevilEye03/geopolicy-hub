@@ -63,14 +63,20 @@ export function Categories() {
   const navigate = useNavigate();
 
   const handleCategoryClick = (categoryName) => {
+    // Navigate home with the category parameter
     navigate(`/?category=${encodeURIComponent(categoryName)}`);
+    // Force a scroll to the results section after a short delay
+    setTimeout(() => {
+        window.scrollTo({ top: 600, behavior: 'smooth' });
+    }, 100);
   };
 
   return (
     <div className="categories-page">
       <header className="page-header">
-        <h1 className="text-gradient">Explore Knowledge</h1>
-        <p>Deep dive into specialized fields of global analysis</p>
+        <div className="hero-tag">Directory</div>
+        <h1 className="hero-title text-gradient">Explore Knowledge</h1>
+        <p className="hero-subtitle">Deep dive into specialized fields of global analysis</p>
       </header>
 
       <div className="categories-grid">
@@ -87,7 +93,15 @@ export function Categories() {
             <div className="category-card-content">
               <h3>{cat.name}</h3>
               <p>{cat.description}</p>
-              <button className="category-action-btn">Explore Category →</button>
+              <button 
+                className="category-action-btn"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleCategoryClick(cat.name);
+                }}
+              >
+                Explore Category →
+              </button>
             </div>
           </div>
         ))}

@@ -39,6 +39,42 @@ const mockArticles = [
     image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80',
     publishedAt: '2025-05-14T09:15:00Z',
     region: 'middle-east'
+  },
+  {
+    id: '4',
+    title: 'The AI Arms Race: Silicon Geopolitics',
+    excerpt: 'How semiconductor supply chains and AI compute power have become the new frontier of national power.',
+    category: 'Science & Tech',
+    readTime: 15,
+    author: 'Chen Wei',
+    authorInitials: 'CW',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-16T11:00:00Z',
+    region: 'indo-pacific'
+  },
+  {
+    id: '5',
+    title: 'Biotech & Global Health Security',
+    excerpt: 'The lessons from the last pandemic are shaping new international treaties on pathogen sharing and vaccine equity.',
+    category: 'Health',
+    readTime: 9,
+    author: 'Dr. Amara Okafor',
+    authorInitials: 'AO',
+    image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-18T10:30:00Z',
+    region: 'africa'
+  },
+  {
+    id: '6',
+    title: 'The Lithium Scramble: Energy Transition Risks',
+    excerpt: 'As the world shifts to EVs, the race for critical minerals is creating new alliances and tensions in South America.',
+    category: 'Energy & Climate',
+    readTime: 11,
+    author: 'Carlos Ruiz',
+    authorInitials: 'CR',
+    image: 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&q=80',
+    publishedAt: '2025-05-20T16:00:00Z',
+    region: 'americas'
   }
 ];
 
