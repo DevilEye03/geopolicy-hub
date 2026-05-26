@@ -1,0 +1,6 @@
+{
+  "appId": "com.geopolicyhub.app",
+  "appName": "GeoPolicy Hub",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
