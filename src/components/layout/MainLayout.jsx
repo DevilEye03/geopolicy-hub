@@ -4,6 +4,7 @@ import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { FloatingMenu } from '../ui/FloatingMenu';
 import { useStore } from '../../store/useStore';
+import { mockArticles } from '../../data/mockArticles';
 
 export function MainLayout() {
   const { theme } = useStore();
@@ -19,7 +20,8 @@ export function MainLayout() {
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
       const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
-      const filtered = savedArticles.filter(a => 
+      const allArticles = [...savedArticles, ...mockArticles];
+      const filtered = allArticles.filter(a => 
         a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (a.tags && a.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())))

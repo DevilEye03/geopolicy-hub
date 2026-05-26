@@ -1,27 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Share2, Globe, MessageCircle, BookOpen, Clock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-
-const mockArticles = [
-  {
-    id: '1',
-    title: 'The Shift in Global Supply Chains Post-2025',
-    content: `<p>In the wake of recent geopolitical realignments, multinational corporations are fundamentally rethinking their approach to global supply chains. The long-standing model of prioritizing cost-efficiency above all else is giving way to a new paradigm focused on resilience, redundancy, and regionalization.</p>
-        <h2>The Catalyst for Change</h2>
-        <p>The vulnerabilities of highly centralized supply networks were exposed by a series of compounding crises. As nations increasingly leverage economic interdependence for strategic advantage, corporate leaders recognize that securing supply lines is now a matter of national security as much as it is a business imperative.</p>
-        <blockquote>
-          "Resilience is no longer a buzzword; it is the fundamental metric by which future operational success will be measured."
-        </blockquote>
-        <h2>Regional Hubs over Global Networks</h2>
-        <p>We are witnessing a shift towards 'nearshoring' and 'friendshoring'—where production facilities are relocated closer to primary markets or to allied nations. This minimizes exposure to sudden tariffs, export controls, or logistical choke points.</p>`,
-    category: 'Geopolitics',
-    readTime: 8,
-    author: 'Dr. Elena Rostova',
-    authorInitials: 'ER',
-    coverImage: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80',
-    publishedAt: '2025-05-10T10:00:00Z'
-  }
-];
+import { mockArticles } from '../data/mockArticles';
 
 export function ArticleView() {
   const { id } = useParams();
@@ -47,6 +27,13 @@ export function ArticleView() {
     const foundArticle = [...savedArticles, ...mockArticles].find(a => String(a.id) === String(id));
     setArticle(foundArticle);
 
+    if (foundArticle) {
+      // Record view
+      const allViews = JSON.parse(localStorage.getItem('geopolicy-article-views') || '{}');
+      allViews[id] = (allViews[id] || 0) + 1;
+      localStorage.setItem('geopolicy-article-views', JSON.stringify(allViews));
+    }
+
     // Progress bar logic
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -69,6 +56,12 @@ export function ArticleView() {
 
   const shareUrl = window.location.href;
   const shareTitle = encodeURIComponent(article.title);
+
+  const summary = article.strategicSummary || {
+    takeaway: `An in-depth analysis focusing on the key trends, strategic policies, and global implications of ${article.category || 'this topic'}.`,
+    risk: 'Potential regulatory adjustments, market friction, and shifting geopolitical alignments between key international actors.',
+    impact: 70
+  };
 
   return (
     <div className={`article-container ${isFocusMode ? 'focus-mode-active' : ''}`}>
@@ -116,16 +109,18 @@ export function ArticleView() {
             <div className="summary-grid">
                 <div className="summary-item">
                     <span className="summary-label">Key Takeaway</span>
-                    <p>Shift towards regional resilient supply chains over global cost-efficiency.</p>
+                    <p>{summary.takeaway}</p>
                 </div>
                 <div className="summary-item">
                     <span className="summary-label">Global Impact</span>
-                    <div className="impact-meter"><div className="impact-fill" style={{ width: '85%' }}></div></div>
-                    <p>High (8.5/10)</p>
+                    <div className="impact-meter">
+                      <div className="impact-fill" style={{ width: `${summary.impact}%` }}></div>
+                    </div>
+                    <p>{summary.impact >= 85 ? 'Critical' : summary.impact >= 75 ? 'High' : 'Medium'} ({(summary.impact / 10).toFixed(1)}/10)</p>
                 </div>
                 <div className="summary-item">
                     <span className="summary-label">Primary Risk</span>
-                    <p>Increased geopolitical fragmentation and trade barriers.</p>
+                    <p>{summary.risk}</p>
                 </div>
             </div>
         </div>

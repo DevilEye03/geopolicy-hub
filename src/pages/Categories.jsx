@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Globe, Users, Scale, FileText, Shield, TrendingUp, Cpu, HeartPulse, Zap } from 'lucide-react';
+import { Globe, Users, Scale, FileText, Shield, TrendingUp, Cpu, HeartPulse, Zap, Handshake } from 'lucide-react';
 
 const categoryData = [
   { 
@@ -56,6 +56,12 @@ const categoryData = [
     icon: Zap, 
     description: 'Energy security and global climate change responses.',
     color: '#84CC16'
+  },
+  { 
+    name: 'Diplomacy', 
+    icon: Handshake, 
+    description: 'Bilateral negotiations, treaties, and international mediation efforts.',
+    color: '#14B8A6'
   }
 ];
 
