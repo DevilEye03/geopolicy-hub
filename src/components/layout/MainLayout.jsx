@@ -5,6 +5,7 @@ import { Footer } from './Footer';
 import { FloatingMenu } from '../ui/FloatingMenu';
 import { useStore } from '../../store/useStore';
 import { mockArticles } from '../../data/mockArticles';
+import { ThreeDBackground } from '../ui/ThreeDBackground';
 
 export function MainLayout() {
   const { theme } = useStore();
@@ -34,6 +35,7 @@ export function MainLayout() {
 
   return (
     <div className="app-container">
+      <ThreeDBackground />
       <div className={`bg-pattern ${theme === 'dark' ? 'pattern-grid' : 'pattern-dots'}`}></div>
       {/* Global Pulse News Ticker */}
       <div className="news-ticker-container">
