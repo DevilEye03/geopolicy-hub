@@ -6,6 +6,7 @@ import { FloatingMenu } from '../ui/FloatingMenu';
 import { useStore } from '../../store/useStore';
 import { mockArticles } from '../../data/mockArticles';
 import { ThreeDBackground } from '../ui/ThreeDBackground';
+import { Tilt3D } from '../ui/Tilt3D';
 
 export function MainLayout() {
   const { theme } = useStore();
@@ -56,8 +57,8 @@ export function MainLayout() {
       </div>
 
       <Navbar 
-        onOpenSidebar={() => setSidebarOpen(true)} 
-        onOpenSearch={() => setSearchOpen(true)} 
+          onOpenSidebar={() => setSidebarOpen(true)} 
+          onOpenSearch={() => setSearchOpen(true)} 
       />
       
       {/* Search Modal */}
@@ -118,9 +119,11 @@ export function MainLayout() {
         </div>
       )}
 
-      <main className="main-content">
-        <Outlet />
-      </main>
+      <Tilt3D maxAngle={1.5} scale={1} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <main className="main-content" style={{ width: '100%' }}>
+          <Outlet />
+        </main>
+      </Tilt3D>
 
       <FloatingMenu />
       <Footer />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Globe, Users, Scale, FileText, Shield, TrendingUp, Cpu, HeartPulse, Zap, Handshake } from 'lucide-react';
+import { Tilt3D } from '../components/ui/Tilt3D';
 
 const categoryData = [
   { 
@@ -87,29 +88,30 @@ export function Categories() {
 
       <div className="categories-grid">
         {categoryData.map((cat, idx) => (
-          <div 
-            key={idx} 
-            className="category-card" 
-            style={{ '--accent': cat.color, cursor: 'pointer' }}
-            onClick={() => handleCategoryClick(cat.name)}
-          >
-            <div className="category-icon-wrapper">
-              <cat.icon size={28} />
+          <Tilt3D key={idx} maxAngle={10} scale={1.03} style={{ display: 'flex', height: '100%' }}>
+            <div 
+              className="category-card" 
+              style={{ '--accent': cat.color, cursor: 'pointer', width: '100%', height: '100%', margin: 0, transformStyle: 'preserve-3d' }}
+              onClick={() => handleCategoryClick(cat.name)}
+            >
+              <div className="category-icon-wrapper parallax-3d-md">
+                <cat.icon size={28} />
+              </div>
+              <div className="category-card-content" style={{ transformStyle: 'preserve-3d' }}>
+                <h3 className="parallax-3d-lg">{cat.name}</h3>
+                <p className="parallax-3d-md" style={{ margin: 0, marginBottom: 'var(--space-md)' }}>{cat.description}</p>
+                <button 
+                  className="category-action-btn parallax-3d-sm"
+                  onClick={(e) => {
+                      e.stopPropagation();
+                      handleCategoryClick(cat.name);
+                  }}
+                >
+                  Explore Category →
+                </button>
+              </div>
             </div>
-            <div className="category-card-content">
-              <h3>{cat.name}</h3>
-              <p>{cat.description}</p>
-              <button 
-                className="category-action-btn"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleCategoryClick(cat.name);
-                }}
-              >
-                Explore Category →
-              </button>
-            </div>
-          </div>
+          </Tilt3D>
         ))}
       </div>
     </div>

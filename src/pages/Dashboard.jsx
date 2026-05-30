@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
 import { mockArticles } from '../data/mockArticles';
+import { Tilt3D } from '../components/ui/Tilt3D';
 
 ChartJS.register(
   CategoryScale,
@@ -116,38 +117,54 @@ export function Dashboard() {
       <h1 style={{ marginBottom: 'var(--space-2xl)' }}>Creator Dashboard</h1>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-md)', marginBottom: 'var(--space-2xl)' }}>
-        <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)' }}>
-          <h3 style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', textTransform: 'uppercase', margin: 0 }}>Total Views</h3>
-          <p style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 'var(--space-xs) 0' }}>
-            {totalViewsCount.toLocaleString()}
-          </p>
-          <span style={{ color: 'var(--success)', fontSize: 'var(--text-sm)' }}>+{12 + loggedViewsSum > 0 ? (12 + (loggedViewsSum / 66).toFixed(1)) : 12}% from last month</span>
-        </div>
-        <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)' }}>
-          <h3 style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', textTransform: 'uppercase', margin: 0 }}>Published Articles</h3>
-          <p style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 'var(--space-xs) 0' }}>
-            {totalArticlesCount}
-          </p>
-          <span style={{ color: 'var(--success)', fontSize: 'var(--text-sm)' }}>+{savedArticles.length} this session</span>
-        </div>
-        <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)' }}>
-          <h3 style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', textTransform: 'uppercase', margin: 0 }}>Subscribers</h3>
-          <p style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 'var(--space-xs) 0' }}>
-            {totalSubscribersCount.toLocaleString()}
-          </p>
-          <span style={{ color: 'var(--success)', fontSize: 'var(--text-sm)' }}>+{subscribers.length} new signups</span>
-        </div>
+        <Tilt3D maxAngle={8} scale={1.03} style={{ display: 'flex' }}>
+          <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)', width: '100%', transformStyle: 'preserve-3d' }}>
+            <h3 className="parallax-3d-sm" style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', textTransform: 'uppercase', margin: 0 }}>Total Views</h3>
+            <p className="parallax-3d-lg" style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 'var(--space-xs) 0' }}>
+              {totalViewsCount.toLocaleString()}
+            </p>
+            <span className="parallax-3d-md" style={{ color: 'var(--success)', fontSize: 'var(--text-sm)', display: 'block' }}>+{12 + loggedViewsSum > 0 ? (12 + (loggedViewsSum / 66).toFixed(1)) : 12}% from last month</span>
+          </div>
+        </Tilt3D>
+        
+        <Tilt3D maxAngle={8} scale={1.03} style={{ display: 'flex' }}>
+          <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)', width: '100%', transformStyle: 'preserve-3d' }}>
+            <h3 className="parallax-3d-sm" style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', textTransform: 'uppercase', margin: 0 }}>Published Articles</h3>
+            <p className="parallax-3d-lg" style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 'var(--space-xs) 0' }}>
+              {totalArticlesCount}
+            </p>
+            <span className="parallax-3d-md" style={{ color: 'var(--success)', fontSize: 'var(--text-sm)', display: 'block' }}>+{savedArticles.length} this session</span>
+          </div>
+        </Tilt3D>
+        
+        <Tilt3D maxAngle={8} scale={1.03} style={{ display: 'flex' }}>
+          <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)', width: '100%', transformStyle: 'preserve-3d' }}>
+            <h3 className="parallax-3d-sm" style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', textTransform: 'uppercase', margin: 0 }}>Subscribers</h3>
+            <p className="parallax-3d-lg" style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', margin: 'var(--space-xs) 0' }}>
+              {totalSubscribersCount.toLocaleString()}
+            </p>
+            <span className="parallax-3d-md" style={{ color: 'var(--success)', fontSize: 'var(--text-sm)', display: 'block' }}>+{subscribers.length} new signups</span>
+          </div>
+        </Tilt3D>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--space-xl)' }}>
-        <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)' }}>
-          <h3 style={{ marginBottom: 'var(--space-md)' }}>Traffic Overview</h3>
-          <Line options={chartOptions} data={lineData} />
-        </div>
-        <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)' }}>
-          <h3 style={{ marginBottom: 'var(--space-md)' }}>Content Distribution</h3>
-          <Bar options={chartOptions} data={barData} />
-        </div>
+        <Tilt3D maxAngle={4} scale={1.01} style={{ display: 'flex' }}>
+          <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)', width: '100%', transformStyle: 'preserve-3d' }}>
+            <h3 className="parallax-3d-sm" style={{ marginBottom: 'var(--space-md)' }}>Traffic Overview</h3>
+            <div className="parallax-3d-md">
+              <Line options={chartOptions} data={lineData} />
+            </div>
+          </div>
+        </Tilt3D>
+        <Tilt3D maxAngle={4} scale={1.01} style={{ display: 'flex' }}>
+          <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-primary)', width: '100%', transformStyle: 'preserve-3d' }}>
+            <h3 className="parallax-3d-sm" style={{ marginBottom: 'var(--space-md)' }}>Content Distribution</h3>
+            <div className="parallax-3d-md">
+              <Bar options={chartOptions} data={barData} />
+            </div>
+          </div>
+        </Tilt3D>
       </div>
     </div>
   );

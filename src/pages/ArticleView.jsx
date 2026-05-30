@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Share2, Globe, MessageCircle, BookOpen, Clock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { mockArticles } from '../data/mockArticles';
+import { Tilt3D } from '../components/ui/Tilt3D';
 
 export function ArticleView() {
   const { id } = useParams();
@@ -104,26 +105,28 @@ export function ArticleView() {
         </header>
 
         {/* Strategic Summary Box */}
-        <div className="strategic-summary">
-            <div className="summary-badge">Strategic Analysis</div>
-            <div className="summary-grid">
-                <div className="summary-item">
-                    <span className="summary-label">Key Takeaway</span>
-                    <p>{summary.takeaway}</p>
-                </div>
-                <div className="summary-item">
-                    <span className="summary-label">Global Impact</span>
-                    <div className="impact-meter">
-                      <div className="impact-fill" style={{ width: `${summary.impact}%` }}></div>
-                    </div>
-                    <p>{summary.impact >= 85 ? 'Critical' : summary.impact >= 75 ? 'High' : 'Medium'} ({(summary.impact / 10).toFixed(1)}/10)</p>
-                </div>
-                <div className="summary-item">
-                    <span className="summary-label">Primary Risk</span>
-                    <p>{summary.risk}</p>
-                </div>
-            </div>
-        </div>
+        <Tilt3D maxAngle={6} scale={1.01} className="strategic-summary-tilt" style={{ margin: 'var(--space-2xl) 0' }}>
+          <div className="strategic-summary" style={{ transformStyle: 'preserve-3d', margin: 0 }}>
+              <div className="summary-badge parallax-3d-lg" style={{ top: '-12px' }}>Strategic Analysis</div>
+              <div className="summary-grid" style={{ transformStyle: 'preserve-3d' }}>
+                  <div className="summary-item">
+                      <span className="summary-label parallax-3d-sm">Key Takeaway</span>
+                      <p className="parallax-3d-md" style={{ margin: 0 }}>{summary.takeaway}</p>
+                  </div>
+                  <div className="summary-item">
+                      <span className="summary-label parallax-3d-sm">Global Impact</span>
+                      <div className="impact-meter parallax-3d-md" style={{ margin: 'var(--space-xs) 0' }}>
+                        <div className="impact-fill" style={{ width: `${summary.impact}%` }}></div>
+                      </div>
+                      <p className="parallax-3d-lg" style={{ margin: 0 }}>{summary.impact >= 85 ? 'Critical' : summary.impact >= 75 ? 'High' : 'Medium'} ({(summary.impact / 10).toFixed(1)}/10)</p>
+                  </div>
+                  <div className="summary-item">
+                      <span className="summary-label parallax-3d-sm">Primary Risk</span>
+                      <p className="parallax-3d-md" style={{ margin: 0 }}>{summary.risk}</p>
+                  </div>
+              </div>
+          </div>
+        </Tilt3D>
 
         <img src={article.coverImage || article.image} alt={article.title} className="article-hero-image" />
 

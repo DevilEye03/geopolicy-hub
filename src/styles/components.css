@@ -810,5 +810,26 @@
     box-shadow: 0 4px 12px var(--accent) 44;
 }
 
+/* Live 3D Perspective Effects */
+.tilt-3d-wrapper {
+    transform-style: preserve-3d;
+}
+
+.parallax-3d-sm {
+    transform: translateZ(12px) scale(0.98);
+}
+
+.parallax-3d-md {
+    transform: translateZ(25px);
+}
+
+.parallax-3d-lg {
+    transform: translateZ(45px);
+}
+
+.parallax-3d-back {
+    transform: translateZ(-15px) scale(1.05);
+}
+
 
 
