@@ -27,10 +27,10 @@ export function Footer() {
           <span className="brand-text" style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', fontFamily: 'var(--font-serif)' }}>GeoPolicy<span style={{ color: 'var(--accent-primary)' }}>Hub</span></span>
           <p style={{ color: 'var(--text-secondary)', marginTop: 'var(--space-md)' }}>Your premier platform for geopolitics, international relations, laws, and policy analysis.</p>
           <div style={{ display: 'flex', gap: 'var(--space-md)', marginTop: 'var(--space-md)' }}>
-            <a href="#" style={{ color: 'var(--text-secondary)' }}><Globe size={20} /></a>
-            <a href="#" style={{ color: 'var(--text-secondary)' }}><Mail size={20} /></a>
-            <a href="#" style={{ color: 'var(--text-secondary)' }}><BookOpen size={20} /></a>
-            <a href="#" style={{ color: 'var(--text-secondary)' }}><Rss size={20} /></a>
+            <Link to="/" style={{ color: 'var(--text-secondary)' }} aria-label="Go to homepage"><Globe size={20} /></Link>
+            <a href="mailto:contact@geopolicyhub.com" style={{ color: 'var(--text-secondary)' }} aria-label="Contact GeoPolicy Hub"><Mail size={20} /></a>
+            <Link to="/categories" style={{ color: 'var(--text-secondary)' }} aria-label="Browse categories"><BookOpen size={20} /></Link>
+            <Link to="/categories" style={{ color: 'var(--text-secondary)' }} aria-label="Read latest analysis feed"><Rss size={20} /></Link>
           </div>
         </div>
         
