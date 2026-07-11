@@ -1,6 +1,10 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Sparkles } from '@react-three/drei';
+
+const pseudoRandom = (seed) => {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+};
 
 function Globe() {
   const globeRef = useRef(null);
@@ -25,6 +29,39 @@ function Globe() {
   );
 }
 
+function Particles({ isMobile }) {
+  const particleRef = useRef(null);
+  const count = isMobile ? 120 : 220;
+
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i += 1) {
+      const i3 = i * 3;
+      const radius = 1.8 + pseudoRandom(i + 1) * 2.6;
+      const angle = pseudoRandom(i + 2) * Math.PI * 2;
+      const height = (pseudoRandom(i + 3) - 0.5) * 2.4;
+      arr[i3] = Math.cos(angle) * radius;
+      arr[i3 + 1] = height;
+      arr[i3 + 2] = Math.sin(angle) * radius;
+    }
+    return arr;
+  }, [count]);
+
+  useFrame((_, delta) => {
+    if (!particleRef.current) return;
+    particleRef.current.rotation.y += delta * 0.03;
+  });
+
+  return (
+    <points ref={particleRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial color="#60A5FA" size={isMobile ? 0.018 : 0.022} transparent opacity={0.68} sizeAttenuation />
+    </points>
+  );
+}
+
 export default function ThreeHeroSceneCanvas({ isMobile = false }) {
   return (
     <Canvas
@@ -37,7 +74,7 @@ export default function ThreeHeroSceneCanvas({ isMobile = false }) {
       <directionalLight position={[2, 2, 2]} intensity={1.2} />
       <pointLight position={[-2, -1, 2]} intensity={0.4} color="#8B5CF6" />
       <Globe />
-      <Sparkles count={isMobile ? 28 : 56} size={2.6} speed={0.18} color="#60A5FA" scale={[5, 3, 3]} />
+      <Particles isMobile={isMobile} />
     </Canvas>
   );
 }
