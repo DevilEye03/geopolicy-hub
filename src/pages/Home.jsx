@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { ArticleCard } from '../components/ui/ArticleCard';
 import { GeopoliticsMap } from '../components/ui/GeopoliticsMap';
+import { ThreeHero } from '../components/hero/ThreeHero';
 import { mockArticles } from '../data/mockArticles';
 
 export function Home() {
@@ -36,15 +37,18 @@ export function Home() {
   return (
     <div className="home-page">
       <section className="hero-section">
-        <div className="hero-tag">Global Intelligence Hub</div>
-        <h1 className="hero-title text-gradient">Perspective on the <br/>Global Future.</h1>
-        <p className="hero-subtitle">
-          Join a elite network of analysts and policy makers. Decipher the complexities of geopolitics, trade, and international law.
-        </p>
-        <div className="hero-cta">
-          <Link to="/write" className="btn btn-primary" style={{ padding: 'var(--space-md) var(--space-2xl)' }}>Start Writing</Link>
-          <Link to="/categories" className="btn" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)', padding: 'var(--space-md) var(--space-2xl)' }}>Explore Analysis</Link>
+        <div className="hero-copy">
+          <div className="hero-tag">Global Intelligence Hub</div>
+          <h1 className="hero-title text-gradient">Perspective on the <br/>Global Future.</h1>
+          <p className="hero-subtitle">
+            Join a elite network of analysts and policy makers. Decipher the complexities of geopolitics, trade, and international law.
+          </p>
+          <div className="hero-cta">
+            <Link to="/write" className="btn btn-primary" style={{ padding: 'var(--space-md) var(--space-2xl)' }}>Start Writing</Link>
+            <Link to="/categories" className="btn" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)', padding: 'var(--space-md) var(--space-2xl)' }}>Explore Analysis</Link>
+          </div>
         </div>
+        <ThreeHero />
       </section>
 
       <GeopoliticsMap 
