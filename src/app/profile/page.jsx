@@ -37,6 +37,10 @@ export default function Profile() {
   };
 
   const articles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
+  const subscribers = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-subscribers') : null) || '[]');
+  
+  const allViews = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-article-views') : null) || '{}');
+  const loggedViewsSum = Object.values(allViews).reduce((a, b) => Number(a) + Number(b), 0);
 
   return (
     <div className="profile-page">
@@ -53,11 +57,11 @@ export default function Profile() {
               <span className="stat-label">Articles</span>
             </div>
             <div className="profile-stat">
-              <span className="stat-number">1,240</span>
+              <span className="stat-number">{subscribers.length.toLocaleString()}</span>
               <span className="stat-label">Subscribers</span>
             </div>
             <div className="profile-stat">
-              <span className="stat-number">6,600</span>
+              <span className="stat-number">{loggedViewsSum.toLocaleString()}</span>
               <span className="stat-label">Total Views</span>
             </div>
           </div>

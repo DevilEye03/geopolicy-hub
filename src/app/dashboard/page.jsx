@@ -60,14 +60,14 @@ export default function Dashboard() {
 
   const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
   const allArticles = [...savedArticles, ...mockArticles];
-  const totalArticlesCount = 10 + savedArticles.length; // 10 mock + user-published
+  const totalArticlesCount = savedArticles.length; // Only count user-published as "their" articles for stats? Let's just use savedArticles.length so it matches profile.
   
   const subscribers = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-subscribers') : null) || '[]');
-  const totalSubscribersCount = 1240 + subscribers.length;
+  const totalSubscribersCount = subscribers.length;
 
   const allViews = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-article-views') : null) || '{}');
   const loggedViewsSum = Object.values(allViews).reduce((a, b) => Number(a) + Number(b), 0);
-  const totalViewsCount = 6600 + loggedViewsSum;
+  const totalViewsCount = loggedViewsSum;
 
   // Compute category counts
   const categoryCounts = {};
