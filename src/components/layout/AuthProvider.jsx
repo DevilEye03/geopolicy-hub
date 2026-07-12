@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../lib/firebase';
-import { useStore } from '../store/useStore';
+import { auth } from '../../lib/firebase';
+import { useStore } from '../../store/useStore';
 
 export function AuthProvider({ children }) {
   const { setUser, setIsAdmin } = useStore();
