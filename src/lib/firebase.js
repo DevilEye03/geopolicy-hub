@@ -13,7 +13,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase only if config is provided and it hasn't been initialized yet
-const app = !getApps().length && firebaseConfig.apiKey ? initializeApp(firebaseConfig) : getApp();
+const app = !getApps().length 
+  ? (firebaseConfig.apiKey ? initializeApp(firebaseConfig) : null) 
+  : getApp();
 const db = app ? getFirestore(app) : null;
 const auth = app ? getAuth(app) : null;
 
