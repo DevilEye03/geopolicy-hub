@@ -20,7 +20,7 @@ export default function Profile() {
   const [profile, setProfile] = useState(() => {
     const saved = (typeof window !== 'undefined' ? localStorage.getItem('geopolicy-profile') : null);
     return saved ? JSON.parse(saved) : {
-      name: user.name || 'Admin User',
+      name: user?.name || 'Admin User',
       bio: 'Geopolitics analyst and policy researcher.',
       email: '',
       location: '',
