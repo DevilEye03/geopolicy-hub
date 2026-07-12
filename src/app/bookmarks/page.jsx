@@ -1,13 +1,14 @@
+"use client";
 import React from 'react';
-import { useStore } from '../store/useStore';
+import { useStore } from '../../store/useStore';
 import { Bookmark } from 'lucide-react';
-import { ArticleCard } from '../components/ui/ArticleCard';
-import { mockArticles } from '../data/mockArticles';
+import { ArticleCard } from '../../components/ui/ArticleCard';
+import { mockArticles } from '../../data/mockArticles';
 
-export function Bookmarks() {
+export default function Bookmarks() {
   const { bookmarks } = useStore();
 
-  const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+  const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
   const allArticles = [...savedArticles, ...mockArticles];
   const bookmarkedArticles = allArticles.filter(art => bookmarks.includes(art.id));
 

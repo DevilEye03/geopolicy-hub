@@ -1,5 +1,6 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { FloatingMenu } from '../ui/FloatingMenu';
@@ -8,7 +9,7 @@ import { mockArticles } from '../../data/mockArticles';
 import { ThreeDBackground } from '../ui/ThreeDBackground';
 import { Tilt3D } from '../ui/Tilt3D';
 
-export function MainLayout() {
+export function MainLayout({ children }) {
   const { theme } = useStore();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isSearchOpen, setSearchOpen] = useState(false);
@@ -21,7 +22,7 @@ export function MainLayout() {
 
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
-      const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+      const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
       const allArticles = [...savedArticles, ...mockArticles];
       const filtered = allArticles.filter(a => 
         a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -78,9 +79,8 @@ export function MainLayout() {
             {results.length > 0 && (
               <div className="search-results">
                 {results.map(article => (
-                  <Link 
-                    key={article.id} 
-                    to={`/article/${article.id}`} 
+                  <Link key={article.id} 
+                    href={`/article/${article.id}`} 
                     className="search-result-item"
                     onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
                   >
@@ -109,11 +109,11 @@ export function MainLayout() {
               <button className="close-btn" onClick={() => setSidebarOpen(false)}>✕</button>
             </div>
             <div className="sidebar-links">
-              <Link to="/" onClick={() => setSidebarOpen(false)}>Home</Link>
-              <Link to="/write" onClick={() => setSidebarOpen(false)}>Write</Link>
-              <Link to="/categories" onClick={() => setSidebarOpen(false)}>Categories</Link>
-              <Link to="/dashboard" onClick={() => setSidebarOpen(false)}>Dashboard</Link>
-              <Link to="/bookmarks" onClick={() => setSidebarOpen(false)}>Bookmarks</Link>
+              <Link href="/" onClick={() => setSidebarOpen(false)}>Home</Link>
+              <Link href="/write" onClick={() => setSidebarOpen(false)}>Write</Link>
+              <Link href="/categories" onClick={() => setSidebarOpen(false)}>Categories</Link>
+              <Link href="/dashboard" onClick={() => setSidebarOpen(false)}>Dashboard</Link>
+              <Link href="/bookmarks" onClick={() => setSidebarOpen(false)}>Bookmarks</Link>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ export function MainLayout() {
 
       <Tilt3D maxAngle={1.5} scale={1} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <main className="main-content" style={{ width: '100%' }}>
-          <Outlet />
+          {children}
         </main>
       </Tilt3D>
 

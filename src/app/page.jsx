@@ -1,25 +1,26 @@
-import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+"use client";
+import React, { Suspense } from 'react';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { ArticleCard } from '../components/ui/ArticleCard';
 import { GeopoliticsMap } from '../components/ui/GeopoliticsMap';
 import { mockArticles } from '../data/mockArticles';
 
-export function Home() {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const initialCategory = queryParams.get('category');
+function HomeContent() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get('category');
   
   const [articles, setArticles] = React.useState(mockArticles);
   const [selectedRegion, setSelectedRegion] = React.useState(initialCategory || null);
 
   React.useEffect(() => {
-    // If the URL changes, update the selected region
-    const cat = new URLSearchParams(location.search).get('category');
+    const cat = searchParams.get('category');
     if (cat) setSelectedRegion(cat);
-  }, [location.search]);
+  }, [searchParams]);
 
   React.useEffect(() => {
-    const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+    const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
     let allArticles = [...savedArticles, ...mockArticles];
     
     if (selectedRegion) {
@@ -42,8 +43,8 @@ export function Home() {
           Join a elite network of analysts and policy makers. Decipher the complexities of geopolitics, trade, and international law.
         </p>
         <div className="hero-cta">
-          <Link to="/write" className="btn btn-primary" style={{ padding: 'var(--space-md) var(--space-2xl)' }}>Start Writing</Link>
-          <Link to="/categories" className="btn" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)', padding: 'var(--space-md) var(--space-2xl)' }}>Explore Analysis</Link>
+          <Link href="/write" className="btn btn-primary" style={{ padding: 'var(--space-md) var(--space-2xl)' }}>Start Writing</Link>
+          <Link href="/categories" className="btn" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)', padding: 'var(--space-md) var(--space-2xl)' }}>Explore Analysis</Link>
         </div>
       </section>
 
@@ -58,7 +59,7 @@ export function Home() {
                 <span style={{ width: '4px', height: '28px', background: 'var(--accent-primary)', display: 'inline-block', borderRadius: 'var(--radius-sm)' }}></span>
                 {selectedRegion ? `Analysis for ${selectedRegion.replace('-', ' ')}` : 'Latest Intelligence'}
             </h2>
-            <Link to="/categories" style={{ color: 'var(--accent-primary)', fontWeight: 'bold', fontSize: 'var(--text-sm)' }}>View all topics →</Link>
+            <Link href="/categories" style={{ color: 'var(--accent-primary)', fontWeight: 'bold', fontSize: 'var(--text-sm)' }}>View all topics →</Link>
         </div>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 'var(--space-2xl)' }}>
@@ -70,11 +71,19 @@ export function Home() {
             <div className="empty-state" style={{ textAlign: 'center', gridColumn: '1 / -1', padding: 'var(--space-4xl)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-xl)' }}>
               <h3>No analysis found yet.</h3>
               <p style={{ color: 'var(--text-secondary)' }}>Be the first to share your perspective on this region.</p>
-              <Link to="/write" className="btn btn-primary" style={{ marginTop: 'var(--space-md)' }}>Draft Article</Link>
+              <Link href="/write" className="btn btn-primary" style={{ marginTop: 'var(--space-md)' }}>Draft Article</Link>
             </div>
           )}
         </div>
       </section>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

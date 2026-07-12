@@ -1,7 +1,8 @@
+"use client";
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Globe, Users, Scale, FileText, Shield, TrendingUp, Cpu, HeartPulse, Zap, Handshake } from 'lucide-react';
-import { Tilt3D } from '../components/ui/Tilt3D';
+import { Tilt3D } from '../../components/ui/Tilt3D';
 
 const categoryData = [
   { 
@@ -66,8 +67,8 @@ const categoryData = [
   }
 ];
 
-export function Categories() {
-  const navigate = useNavigate();
+export default function Categories() {
+  const navigate = useRouter();
 
   const handleCategoryClick = (categoryName) => {
     // Navigate home with the category parameter

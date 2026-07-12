@@ -1,10 +1,12 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { Share2, Globe, MessageCircle, BookOpen, Clock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import { mockArticles } from '../data/mockArticles';
-import { Tilt3D } from '../components/ui/Tilt3D';
+import { mockArticles } from '../../../data/mockArticles';
+import { Tilt3D } from '../../../components/ui/Tilt3D';
 
-export function ArticleView() {
+export default function ArticleView() {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -24,15 +26,15 @@ export function ArticleView() {
     window.scrollTo(0, 0);
 
     // Fetch article
-    const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+    const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
     const foundArticle = [...savedArticles, ...mockArticles].find(a => String(a.id) === String(id));
     setArticle(foundArticle);
 
     if (foundArticle) {
       // Record view
-      const allViews = JSON.parse(localStorage.getItem('geopolicy-article-views') || '{}');
+      const allViews = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-article-views') : null) || '{}');
       allViews[id] = (allViews[id] || 0) + 1;
-      localStorage.setItem('geopolicy-article-views', JSON.stringify(allViews));
+      (typeof window !== 'undefined' && localStorage.setItem('geopolicy-article-views', JSON.stringify(allViews)));
     }
 
     // Progress bar logic
@@ -50,12 +52,12 @@ export function ArticleView() {
     return (
       <div style={{ textAlign: 'center', padding: '100px 0' }}>
         <h2>Article Not Found</h2>
-        <Link to="/" className="btn btn-primary" style={{ marginTop: 'var(--space-md)' }}>Return Home</Link>
+        <Link href="/" className="btn btn-primary" style={{ marginTop: 'var(--space-md)' }}>Return Home</Link>
       </div>
     );
   }
 
-  const shareUrl = window.location.href;
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
   const shareTitle = encodeURIComponent(article.title);
 
   const summary = article.strategicSummary || {
@@ -71,7 +73,7 @@ export function ArticleView() {
         <div className="reading-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
       </div>
 
-      <Link to="/" className="back-link">
+      <Link href="/" className="back-link">
         <ArrowLeft size={18} /> Back to Insights
       </Link>
 
@@ -151,9 +153,9 @@ export function ArticleView() {
               date: new Date().toISOString()
             };
             
-            const allComments = JSON.parse(localStorage.getItem(`comments-${article.id}`) || '[]');
+            const allComments = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem(`comments-${article.id}`) : null) || '[]');
             const updatedComments = [newComment, ...allComments];
-            localStorage.setItem(`comments-${article.id}`, JSON.stringify(updatedComments));
+            (typeof window !== 'undefined' && localStorage.setItem(`comments-${article.id}`, JSON.stringify(updatedComments)));
             
             e.target.reset();
             // Trigger a re-render
@@ -165,7 +167,7 @@ export function ArticleView() {
           </form>
 
           <div className="comments-list">
-            {JSON.parse(localStorage.getItem(`comments-${article.id}`) || '[]').map(comment => (
+            {JSON.parse((typeof window !== 'undefined' ? localStorage.getItem(`comments-${article.id}`) : null) || '[]').map(comment => (
               <div key={comment.id} className="comment-item">
                 <div className="comment-header">
                   <span className="comment-author">{comment.name}</span>

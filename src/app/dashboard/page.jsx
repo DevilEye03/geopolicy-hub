@@ -1,4 +1,5 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,8 +13,8 @@ import {
   Filler,
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
-import { mockArticles } from '../data/mockArticles';
-import { Tilt3D } from '../components/ui/Tilt3D';
+import { mockArticles } from '../../data/mockArticles';
+import { Tilt3D } from '../../components/ui/Tilt3D';
 
 ChartJS.register(
   CategoryScale,
@@ -40,15 +41,31 @@ const categoryColors = {
   'Diplomacy': '#14B8A6'
 };
 
-export function Dashboard() {
-  const savedArticles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+export default function Dashboard() {
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.getAttribute('data-theme') !== 'light');
+    
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-theme') {
+          setIsDark(document.documentElement.getAttribute('data-theme') !== 'light');
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
+  const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
   const allArticles = [...savedArticles, ...mockArticles];
   const totalArticlesCount = 10 + savedArticles.length; // 10 mock + user-published
   
-  const subscribers = JSON.parse(localStorage.getItem('geopolicy-subscribers') || '[]');
+  const subscribers = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-subscribers') : null) || '[]');
   const totalSubscribersCount = 1240 + subscribers.length;
 
-  const allViews = JSON.parse(localStorage.getItem('geopolicy-article-views') || '{}');
+  const allViews = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-article-views') : null) || '{}');
   const loggedViewsSum = Object.values(allViews).reduce((a, b) => Number(a) + Number(b), 0);
   const totalViewsCount = 6600 + loggedViewsSum;
 
@@ -59,7 +76,6 @@ export function Dashboard() {
     categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
   });
 
-  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
   const textColor = isDark ? '#9CA3B8' : '#4B5563';
   const gridColor = isDark ? '#2A3040' : '#E0E2E8';
 

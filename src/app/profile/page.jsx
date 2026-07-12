@@ -1,12 +1,13 @@
+"use client";
 import React, { useState } from 'react';
 import { User, Mail, Globe, MapPin, FileText, Save, ExternalLink, MessageCircle } from 'lucide-react';
-import { useStore } from '../store/useStore';
+import { useStore } from '../../store/useStore';
 
-export function Profile() {
+export default function Profile() {
   const { user } = useStore();
   
   const [profile, setProfile] = useState(() => {
-    const saved = localStorage.getItem('geopolicy-profile');
+    const saved = (typeof window !== 'undefined' ? localStorage.getItem('geopolicy-profile') : null);
     return saved ? JSON.parse(saved) : {
       name: user.name || 'Admin User',
       bio: 'Geopolitics analyst and policy researcher.',
@@ -30,12 +31,12 @@ export function Profile() {
   };
 
   const handleSave = () => {
-    localStorage.setItem('geopolicy-profile', JSON.stringify(profile));
+    (typeof window !== 'undefined' && localStorage.setItem('geopolicy-profile', JSON.stringify(profile)));
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const articles = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+  const articles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
 
   return (
     <div className="profile-page">

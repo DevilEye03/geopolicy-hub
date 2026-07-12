@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { Share2, Bookmark, ArrowUp, Plus, X, Globe, MessageCircle, BookOpen } from 'lucide-react';
 
@@ -8,7 +9,7 @@ export function FloatingMenu() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const shareUrl = window.location.href;
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
   const shareTitle = "Check out this geopolitical analysis on GeoPolicy Hub";
 
   return (

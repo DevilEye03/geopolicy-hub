@@ -1,6 +1,7 @@
+"use client";
 import React from 'react';
 import { Rss, Mail, Globe, BookOpen } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export function Footer() {
   const [email, setEmail] = React.useState('');
@@ -8,10 +9,10 @@ export function Footer() {
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    const subscribers = JSON.parse(localStorage.getItem('geopolicy-subscribers') || '[]');
+    const subscribers = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-subscribers') : null) || '[]');
     if (!subscribers.includes(email)) {
       subscribers.push(email);
-      localStorage.setItem('geopolicy-subscribers', JSON.stringify(subscribers));
+      (typeof window !== 'undefined' && localStorage.setItem('geopolicy-subscribers', JSON.stringify(subscribers)));
     }
     setIsSubscribed(true);
     setEmail('');
@@ -37,21 +38,21 @@ export function Footer() {
         <div>
           <h4 style={{ marginBottom: 'var(--space-md)' }}>Categories</h4>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-sm)' }}>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Geopolitics</Link>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Relations</Link>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Laws</Link>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Policies</Link>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Tech</Link>
-            <Link to="/categories" style={{ color: 'var(--text-secondary)' }}>Health</Link>
+            <Link href="/categories" style={{ color: 'var(--text-secondary)' }}>Geopolitics</Link>
+            <Link href="/categories" style={{ color: 'var(--text-secondary)' }}>Relations</Link>
+            <Link href="/categories" style={{ color: 'var(--text-secondary)' }}>Laws</Link>
+            <Link href="/categories" style={{ color: 'var(--text-secondary)' }}>Policies</Link>
+            <Link href="/categories" style={{ color: 'var(--text-secondary)' }}>Tech</Link>
+            <Link href="/categories" style={{ color: 'var(--text-secondary)' }}>Health</Link>
           </div>
         </div>
 
         <div>
           <h4 style={{ marginBottom: 'var(--space-md)' }}>Platform</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
-            <Link to="/write" style={{ color: 'var(--text-secondary)' }}>Write an Article</Link>
-            <Link to="/dashboard" style={{ color: 'var(--text-secondary)' }}>Dashboard</Link>
-            <Link to="/bookmarks" style={{ color: 'var(--text-secondary)' }}>Bookmarks</Link>
+            <Link href="/write" style={{ color: 'var(--text-secondary)' }}>Write an Article</Link>
+            <Link href="/dashboard" style={{ color: 'var(--text-secondary)' }}>Dashboard</Link>
+            <Link href="/bookmarks" style={{ color: 'var(--text-secondary)' }}>Bookmarks</Link>
           </div>
         </div>
 

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useRef, useCallback } from 'react';
 import { Bold, Italic, Underline, List, ListOrdered, Quote, Link2, Image, Type, Heading1, Heading2, Heading3, Send, Save, Eye, EyeOff, Tag } from 'lucide-react';
 
@@ -14,7 +15,7 @@ function ToolbarButton({ icon: Icon, label, active, onClick }) {
   );
 }
 
-export function Write() {
+export default function Write() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('Geopolitics');
@@ -49,7 +50,7 @@ export function Write() {
       savedAt: new Date().toISOString(),
       status: 'draft'
     };
-    localStorage.setItem('geopolicy-draft', JSON.stringify(articleData));
+    (typeof window !== 'undefined' && localStorage.setItem('geopolicy-draft', JSON.stringify(articleData)));
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
   };
@@ -71,12 +72,12 @@ export function Write() {
     };
 
     // Save to localStorage articles list
-    const existing = JSON.parse(localStorage.getItem('geopolicy-articles') || '[]');
+    const existing = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
     existing.unshift(articleData);
-    localStorage.setItem('geopolicy-articles', JSON.stringify(existing));
+    (typeof window !== 'undefined' && localStorage.setItem('geopolicy-articles', JSON.stringify(existing)));
     
     // Clear draft
-    localStorage.removeItem('geopolicy-draft');
+    (typeof window !== 'undefined' && localStorage.removeItem('geopolicy-draft'));
     
     alert('🎉 Article published successfully!');
     setTitle('');
@@ -88,7 +89,7 @@ export function Write() {
 
   // Load draft on mount
   React.useEffect(() => {
-    const draft = localStorage.getItem('geopolicy-draft');
+    const draft = (typeof window !== 'undefined' ? localStorage.getItem('geopolicy-draft') : null);
     if (draft) {
       try {
         const data = JSON.parse(draft);

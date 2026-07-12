@@ -1,36 +1,38 @@
+"use client";
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Home, PenSquare, LayoutGrid, BarChart3, Bookmark, Search, Moon, Sun, Menu } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 
 export function Navbar({ onOpenSidebar, onOpenSearch }) {
-  const location = useLocation();
+  const pathname = usePathname();
   const { theme, toggleTheme, user } = useStore();
 
-  const isActive = (path) => location.pathname === path ? 'active' : '';
+  const isActive = (path) => pathname === path ? 'active' : '';
 
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <Link to="/" className="navbar-brand">
+        <Link href="/" className="navbar-brand">
           <span className="brand-icon">🌐</span>
           <span className="brand-text">GeoPolicy<span className="brand-accent">Hub</span></span>
         </Link>
         
         <div className="navbar-links">
-          <Link to="/" className={`nav-link ${isActive('/')}`}>
+          <Link href="/" className={`nav-link ${isActive('/')}`}>
             <Home size={18} /> Home
           </Link>
-          <Link to="/write" className={`nav-link ${isActive('/write')}`}>
+          <Link href="/write" className={`nav-link ${isActive('/write')}`}>
             <PenSquare size={18} /> Write
           </Link>
-          <Link to="/categories" className={`nav-link ${isActive('/categories')}`}>
+          <Link href="/categories" className={`nav-link ${isActive('/categories')}`}>
             <LayoutGrid size={18} /> Categories
           </Link>
-          <Link to="/dashboard" className={`nav-link ${isActive('/dashboard')}`}>
+          <Link href="/dashboard" className={`nav-link ${isActive('/dashboard')}`}>
             <BarChart3 size={18} /> Dashboard
           </Link>
-          <Link to="/bookmarks" className={`nav-link ${isActive('/bookmarks')}`}>
+          <Link href="/bookmarks" className={`nav-link ${isActive('/bookmarks')}`}>
             <Bookmark size={18} /> Bookmarks
           </Link>
         </div>
@@ -42,7 +44,7 @@ export function Navbar({ onOpenSidebar, onOpenSearch }) {
           <button className="nav-icon-btn" onClick={toggleTheme} title="Toggle theme">
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          <Link to="/profile" className="nav-avatar" title="Profile">
+          <Link href="/profile" className="nav-avatar" title="Profile">
             <div className="avatar avatar-sm" style={{ 
               width: '32px', height: '32px', borderRadius: '50%', 
               background: 'var(--accent-primary)', color: 'white', 

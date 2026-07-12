@@ -1,5 +1,6 @@
+"use client";
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Bookmark, MessageCircle } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { Tilt3D } from './Tilt3D';
@@ -19,7 +20,7 @@ export function ArticleCard({ article }) {
 
   return (
     <Tilt3D maxAngle={12} scale={1.03} className="article-card-tilt-wrapper" style={{ display: 'flex', height: '100%' }}>
-      <Link to={`/article/${article.id}`} className="article-card" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Link href={`/article/${article.id}`} className="article-card" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
         <img 
           src={article.image || 'https://images.unsplash.com/photo-1526450616598-f51cb1c26b86?auto=format&fit=crop&q=80'} 
           alt={article.title} 
