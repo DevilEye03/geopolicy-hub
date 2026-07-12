@@ -3,14 +3,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Share2, Globe, MessageCircle, BookOpen, Clock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import { mockArticles } from '../../../data/mockArticles';
 import { Tilt3D } from '../../../components/ui/Tilt3D';
 
 export default function ArticleView() {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
+  const [comments, setComments] = useState([]);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isFocusMode, setIsFocusMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isFocusMode) {
@@ -22,20 +23,40 @@ export default function ArticleView() {
   }, [isFocusMode]);
 
   useEffect(() => {
-    // Scroll to top on load
     window.scrollTo(0, 0);
 
-    // Fetch article
-    const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
-    const foundArticle = [...savedArticles, ...mockArticles].find(a => String(a.id) === String(id));
-    setArticle(foundArticle);
+    async function fetchArticleData() {
+      try {
+        const { db } = await import('../../../lib/firebase');
+        const { doc, getDoc, collection, getDocs, addDoc, updateDoc, increment, query, orderBy } = await import('firebase/firestore');
+        
+        // Fetch article
+        const docRef = doc(db, 'articles', id);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          setArticle({ id: docSnap.id, ...docSnap.data() });
+          
+          // Increment views
+          await updateDoc(docRef, {
+            views: increment(1)
+          });
 
-    if (foundArticle) {
-      // Record view
-      const allViews = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-article-views') : null) || '{}');
-      allViews[id] = (allViews[id] || 0) + 1;
-      (typeof window !== 'undefined' && localStorage.setItem('geopolicy-article-views', JSON.stringify(allViews)));
+          // Fetch comments
+          const commentsRef = collection(db, 'articles', id, 'comments');
+          const q = query(commentsRef, orderBy('date', 'desc'));
+          const commentsSnap = await getDocs(q);
+          const fetchedComments = commentsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+          setComments(fetchedComments);
+        }
+      } catch (error) {
+        console.error("Error fetching article:", error);
+      } finally {
+        setLoading(false);
+      }
     }
+
+    fetchArticleData();
 
     // Progress bar logic
     const handleScroll = () => {
@@ -47,6 +68,37 @@ export default function ArticleView() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [id]);
+
+  const handlePostComment = async (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const text = e.target.comment.value;
+    if (!name || !text) return;
+    
+    try {
+      const { db } = await import('../../../lib/firebase');
+      const { collection, addDoc } = await import('firebase/firestore');
+      
+      const newComment = {
+        name,
+        text,
+        date: new Date().toISOString()
+      };
+      
+      const commentsRef = collection(db, 'articles', id, 'comments');
+      const docRef = await addDoc(commentsRef, newComment);
+      
+      setComments([{ id: docRef.id, ...newComment }, ...comments]);
+      e.target.reset();
+    } catch (error) {
+      console.error("Error posting comment:", error);
+      alert("Failed to post comment.");
+    }
+  };
+
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '100px 0' }}><h2>Loading Analysis...</h2></div>;
+  }
 
   if (!article) {
     return (
@@ -83,6 +135,8 @@ export default function ArticleView() {
             <span className="category-tag">{article.category}</span>
             <span className="separator">•</span>
             <span className="read-time"><Clock size={14} /> {article.readTime} min read</span>
+            <span className="separator">•</span>
+            <span className="read-time"><Eye size={14} /> {article.views || 1} views</span>
             <button 
               className={`focus-toggle ${isFocusMode ? 'active' : ''}`} 
               onClick={() => setIsFocusMode(!isFocusMode)}
@@ -140,34 +194,14 @@ export default function ArticleView() {
         {/* Comments Section */}
         <section className="comments-section">
           <h3>Analysis & Discussion</h3>
-          <form className="comment-form" onSubmit={(e) => {
-            e.preventDefault();
-            const name = e.target.name.value;
-            const text = e.target.comment.value;
-            if (!name || !text) return;
-            
-            const newComment = {
-              id: Date.now(),
-              name,
-              text,
-              date: new Date().toISOString()
-            };
-            
-            const allComments = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem(`comments-${article.id}`) : null) || '[]');
-            const updatedComments = [newComment, ...allComments];
-            (typeof window !== 'undefined' && localStorage.setItem(`comments-${article.id}`, JSON.stringify(updatedComments)));
-            
-            e.target.reset();
-            // Trigger a re-render
-            window.location.reload(); 
-          }}>
+          <form className="comment-form" onSubmit={handlePostComment}>
             <input type="text" name="name" placeholder="Your Name" required />
             <textarea name="comment" placeholder="Add your analysis or perspective..." required></textarea>
             <button type="submit" className="btn btn-primary">Post Comment</button>
           </form>
 
           <div className="comments-list">
-            {JSON.parse((typeof window !== 'undefined' ? localStorage.getItem(`comments-${article.id}`) : null) || '[]').map(comment => (
+            {comments.map(comment => (
               <div key={comment.id} className="comment-item">
                 <div className="comment-header">
                   <span className="comment-author">{comment.name}</span>
@@ -176,6 +210,7 @@ export default function ArticleView() {
                 <p className="comment-text">{comment.text}</p>
               </div>
             ))}
+            {comments.length === 0 && <p style={{ color: 'var(--text-tertiary)' }}>No comments yet. Be the first to share your perspective.</p>}
           </div>
         </section>
 

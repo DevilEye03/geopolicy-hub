@@ -2,9 +2,20 @@
 import React, { useState } from 'react';
 import { User, Mail, Globe, MapPin, FileText, Save, ExternalLink, MessageCircle } from 'lucide-react';
 import { useStore } from '../../store/useStore';
+import { useRouter } from 'next/navigation';
 
 export default function Profile() {
-  const { user } = useStore();
+  const { user, isAdmin } = useStore();
+  const router = useRouter();
+  
+  React.useEffect(() => {
+    if (!isAdmin) {
+      const timeout = setTimeout(() => {
+        if (!useStore.getState().isAdmin) router.push('/');
+      }, 1500);
+      return () => clearTimeout(timeout);
+    }
+  }, [isAdmin, router]);
   
   const [profile, setProfile] = useState(() => {
     const saved = (typeof window !== 'undefined' ? localStorage.getItem('geopolicy-profile') : null);
@@ -36,11 +47,25 @@ export default function Profile() {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const articles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
-  const subscribers = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-subscribers') : null) || '[]');
+  const [articles, setArticles] = useState([]);
   
-  const allViews = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-article-views') : null) || '{}');
-  const loggedViewsSum = Object.values(allViews).reduce((a, b) => Number(a) + Number(b), 0);
+  React.useEffect(() => {
+    async function fetchStats() {
+      try {
+        const { db } = await import('../../lib/firebase');
+        const { collection, getDocs } = await import('firebase/firestore');
+        const querySnapshot = await getDocs(collection(db, 'articles'));
+        const fetchedArticles = querySnapshot.docs.map(doc => doc.data());
+        setArticles(fetchedArticles);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    }
+    fetchStats();
+  }, []);
+
+  const subscribers = [];
+  const loggedViewsSum = articles.reduce((sum, article) => sum + (article.views || 0), 0);
 
   return (
     <div className="profile-page">

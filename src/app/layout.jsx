@@ -6,6 +6,7 @@ import '../styles/components.css';
 import '../styles/pages.css';
 
 import { MainLayout } from '../components/layout/MainLayout';
+import { AuthProvider } from '../components/layout/AuthProvider';
 
 export const metadata = {
   title: 'GeoPolicy Hub',
@@ -27,7 +28,9 @@ export default function RootLayout({ children }) {
         <meta charSet="UTF-8" />
       </head>
       <body>
-        <MainLayout>{children}</MainLayout>
+        <AuthProvider>
+          <MainLayout>{children}</MainLayout>
+        </AuthProvider>
       </body>
     </html>
   );

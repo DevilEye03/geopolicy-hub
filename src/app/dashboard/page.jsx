@@ -15,6 +15,8 @@ import {
 import { Line, Bar } from 'react-chartjs-2';
 import { mockArticles } from '../../data/mockArticles';
 import { Tilt3D } from '../../components/ui/Tilt3D';
+import { useStore } from '../../store/useStore';
+import { useRouter } from 'next/navigation';
 
 ChartJS.register(
   CategoryScale,
@@ -42,6 +44,18 @@ const categoryColors = {
 };
 
 export default function Dashboard() {
+  const { isAdmin } = useStore();
+  const router = useRouter();
+  
+  React.useEffect(() => {
+    if (!isAdmin) {
+      const timeout = setTimeout(() => {
+        if (!useStore.getState().isAdmin) router.push('/');
+      }, 1500);
+      return () => clearTimeout(timeout);
+    }
+  }, [isAdmin, router]);
+
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
@@ -58,15 +72,34 @@ export default function Dashboard() {
     return () => observer.disconnect();
   }, []);
 
-  const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const { db } = await import('../../lib/firebase');
+        const { collection, getDocs } = await import('firebase/firestore');
+        const querySnapshot = await getDocs(collection(db, 'articles'));
+        const fetchedArticles = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setArticles(fetchedArticles);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchStats();
+  }, []);
+
+  const savedArticles = articles;
   const allArticles = [...savedArticles, ...mockArticles];
-  const totalArticlesCount = savedArticles.length; // Only count user-published as "their" articles for stats? Let's just use savedArticles.length so it matches profile.
+  const totalArticlesCount = savedArticles.length;
   
-  const subscribers = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-subscribers') : null) || '[]');
+  const subscribers = []; // For now, we can skip fetching subscribers or mock it
   const totalSubscribersCount = subscribers.length;
 
-  const allViews = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-article-views') : null) || '{}');
-  const loggedViewsSum = Object.values(allViews).reduce((a, b) => Number(a) + Number(b), 0);
+  const loggedViewsSum = savedArticles.reduce((sum, article) => sum + (article.views || 0), 0);
   const totalViewsCount = loggedViewsSum;
 
   // Compute category counts

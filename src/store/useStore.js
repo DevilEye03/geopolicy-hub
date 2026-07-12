@@ -10,10 +10,10 @@ export const useStore = create((set) => ({
     bookmarks: state.bookmarks.filter(id => id !== articleId) 
   })),
 
-  user: {
-    name: 'Admin User',
-    avatar: 'GP'
-  },
+  user: null,
+  isAdmin: false,
+  setUser: (user) => set({ user }),
+  setIsAdmin: (isAdmin) => set({ isAdmin }),
 
   isSearchOpen: false,
   toggleSearch: () => set((state) => ({ isSearchOpen: !state.isSearchOpen })),

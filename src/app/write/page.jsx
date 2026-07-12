@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useRef, useCallback } from 'react';
 import { Bold, Italic, Underline, List, ListOrdered, Quote, Link2, Image, Type, Heading1, Heading2, Heading3, Send, Save, Eye, EyeOff, Tag } from 'lucide-react';
+import { useStore } from '../../store/useStore';
+import { useRouter } from 'next/navigation';
 
 function ToolbarButton({ icon: Icon, label, active, onClick }) {
   return (
@@ -16,6 +18,18 @@ function ToolbarButton({ icon: Icon, label, active, onClick }) {
 }
 
 export default function Write() {
+  const { isAdmin } = useStore();
+  const router = useRouter();
+  
+  React.useEffect(() => {
+    if (!isAdmin) {
+      const timeout = setTimeout(() => {
+        if (!useStore.getState().isAdmin) router.push('/');
+      }, 1500);
+      return () => clearTimeout(timeout);
+    }
+  }, [isAdmin, router]);
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('Geopolitics');
@@ -55,36 +69,41 @@ export default function Write() {
     setTimeout(() => setIsSaved(false), 2000);
   };
 
-  const handlePublish = () => {
-    const articleData = {
-      id: Date.now().toString(),
-      title,
-      content: editorRef.current?.innerHTML || '',
-      excerpt: editorRef.current?.innerText?.substring(0, 200) || '',
-      category,
-      tags: tags.split(',').map(t => t.trim()).filter(Boolean),
-      coverImage: coverImage || 'https://images.unsplash.com/photo-1526450616598-f51cb1c26b86?auto=format&fit=crop&q=80',
-      author: 'Admin User',
-      authorInitials: 'GP',
-      readTime: Math.max(1, Math.ceil((editorRef.current?.innerText?.split(' ').length || 0) / 200)),
-      publishedAt: new Date().toISOString(),
-      status: 'published'
-    };
+  const handlePublish = async () => {
+    try {
+      const { db } = await import('../../lib/firebase');
+      const { collection, addDoc } = await import('firebase/firestore');
+      
+      const articleData = {
+        title,
+        content: editorRef.current?.innerHTML || '',
+        excerpt: editorRef.current?.innerText?.substring(0, 200) || '',
+        category,
+        tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+        coverImage: coverImage || 'https://images.unsplash.com/photo-1526450616598-f51cb1c26b86?auto=format&fit=crop&q=80',
+        author: useStore.getState().user?.name || 'Admin User',
+        authorInitials: useStore.getState().user?.avatar || 'GP',
+        readTime: Math.max(1, Math.ceil((editorRef.current?.innerText?.split(' ').length || 0) / 200)),
+        publishedAt: new Date().toISOString(),
+        status: 'published'
+      };
 
-    // Save to localStorage articles list
-    const existing = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
-    existing.unshift(articleData);
-    (typeof window !== 'undefined' && localStorage.setItem('geopolicy-articles', JSON.stringify(existing)));
-    
-    // Clear draft
-    (typeof window !== 'undefined' && localStorage.removeItem('geopolicy-draft'));
-    
-    alert('🎉 Article published successfully!');
-    setTitle('');
-    setContent('');
-    setTags('');
-    setCoverImage('');
-    if (editorRef.current) editorRef.current.innerHTML = '';
+      await addDoc(collection(db, 'articles'), articleData);
+      
+      // Clear draft
+      (typeof window !== 'undefined' && localStorage.removeItem('geopolicy-draft'));
+      
+      alert('🎉 Article published successfully!');
+      setTitle('');
+      setContent('');
+      setTags('');
+      setCoverImage('');
+      if (editorRef.current) editorRef.current.innerHTML = '';
+      router.push('/dashboard');
+    } catch (error) {
+      console.error("Error publishing article: ", error);
+      alert("Failed to publish article. " + error.message);
+    }
   };
 
   // Load draft on mount

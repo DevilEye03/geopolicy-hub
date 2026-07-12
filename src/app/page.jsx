@@ -20,18 +20,44 @@ function HomeContent() {
   }, [searchParams]);
 
   React.useEffect(() => {
-    const savedArticles = JSON.parse((typeof window !== 'undefined' ? localStorage.getItem('geopolicy-articles') : null) || '[]');
-    let allArticles = [...savedArticles, ...mockArticles];
-    
-    if (selectedRegion) {
-      allArticles = allArticles.filter(a => 
-        a.region?.toLowerCase() === selectedRegion.toLowerCase() ||
-        a.category?.toLowerCase() === selectedRegion.toLowerCase() ||
-        a.tags?.some(t => t.toLowerCase() === selectedRegion.toLowerCase())
-      );
+    async function fetchArticles() {
+      try {
+        const { db } = await import('../lib/firebase');
+        const { collection, getDocs, query, orderBy } = await import('firebase/firestore');
+        const q = query(collection(db, 'articles'), orderBy('publishedAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const fetchedArticles = querySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+
+        let allArticles = [...fetchedArticles, ...mockArticles];
+        
+        if (selectedRegion) {
+          allArticles = allArticles.filter(a => 
+            a.region?.toLowerCase() === selectedRegion.toLowerCase() ||
+            a.category?.toLowerCase() === selectedRegion.toLowerCase() ||
+            a.tags?.some(t => t.toLowerCase() === selectedRegion.toLowerCase())
+          );
+        }
+        
+        setArticles(allArticles);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+        // Fallback
+        let allArticles = [...mockArticles];
+        if (selectedRegion) {
+          allArticles = allArticles.filter(a => 
+            a.region?.toLowerCase() === selectedRegion.toLowerCase() ||
+            a.category?.toLowerCase() === selectedRegion.toLowerCase() ||
+            a.tags?.some(t => t.toLowerCase() === selectedRegion.toLowerCase())
+          );
+        }
+        setArticles(allArticles);
+      }
     }
     
-    setArticles(allArticles);
+    fetchArticles();
   }, [selectedRegion]);
 
   return (
