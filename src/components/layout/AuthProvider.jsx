@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
           avatar: currentUser.photoURL || 'GP'
         });
         
-        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+        const adminEmail = "ankur.upadhyay7v@gmail.com";
         setIsAdmin(currentUser.email === adminEmail);
       } else {
         setUser(null);
